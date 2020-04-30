@@ -1,0 +1,18 @@
+<?php
+/**
+ *  Json view 
+ */
+class JsonView
+{
+	/**
+	 * Json view format
+	 * @param  array $content 
+	 * @return json       
+	 */
+	public function render($content)
+	{
+		header('Content-Type: application/json charset=utf8');
+		echo json_encode($content);
+		return true;
+	}
+}
