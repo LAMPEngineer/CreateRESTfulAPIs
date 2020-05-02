@@ -9,4 +9,4 @@ App is built on core PHP 7.2.5 and MySQL 5.6
 
 # Architecture
 
-![architecture_create_rest_api.jpg](core_php_rest_app/img/architecture_create_rest_api.jpg)
+![architecture_create_rest_api.jpg](./architecture_create_rest_api.jpg)
