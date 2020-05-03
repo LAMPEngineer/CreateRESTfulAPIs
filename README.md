@@ -26,7 +26,7 @@ Example: http://127.0.0.1:8080/api/itemstore/v1/items
  
  * A trailing forward slash (/) should not be included in URIs
 
-Exapmle: /api/itemstore/v1/items/1/       
+Exapmle: /api/itemstore/v1/items/       
          
      
 # Architecture
