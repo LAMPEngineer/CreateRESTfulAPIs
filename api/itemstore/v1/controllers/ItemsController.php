@@ -3,7 +3,9 @@
 /*
  *  Items controller to have actions for items
  */
+
 use RequestController as Request;
+
 
 class ItemsController
 {
@@ -14,12 +16,21 @@ class ItemsController
 	private $conn;
 
 	/**
+	 * to hold item model object
+	 * @var object
+	 */
+	private $item_model;
+
+	/**
 	 * construct initialize db connection object
 	 */
 	public function __construct()
 	{
 		$db = new DatabaseConfig;
-		$this->conn = $db->connect();	
+		$this->conn = $db->connect();
+
+		//Get item model object
+		$this->item_model = new ItemModel($this->conn);
 	}
 
 	/**
@@ -28,7 +39,7 @@ class ItemsController
 	 * as well as a collection
 	 * 
 	 * @param  Request $request object
-	 * @return array            dara
+	 * @return array            response
 	 */
 	public function getAction(Request $request):array
 	{
@@ -41,7 +52,7 @@ class ItemsController
 			// invalid item id
 			if(($item_id == 0) or empty($item_id)){
 
-				$data['message'] = 'invalid item id.';
+				$data['message'] = 'ERROR: Bad Request';
 				$data['status'] = '0';
 
 				return $data;
@@ -56,15 +67,14 @@ class ItemsController
 			$item_id = '0';
 		}
 
-		//Get item model object
-		$items = new ItemModel($this->conn);
-		$result = $items->read($item_id);
+		// call read action on item model object		
+		$result = $this->item_model->read($item_id);
 
-		// Get row count
+		// get row count
   		$num = $result->rowCount();
   		if($num > 0){
 
-  			//fetch PDO result set
+  			// fetch PDO result set
   			$data['data'] = $result->fetchAll(PDO::FETCH_ASSOC);
   			$data['status'] = '1';
 
@@ -77,11 +87,50 @@ class ItemsController
 		return $data;
 	}
 
-	public function postAction(Request $request)
+	/**
+	 * Action for POST verb
+	 * for both individual resource 
+	 * as well as a collection
+	 * 
+	 * @param  Request $request object
+	 * @return array            response
+	 */
+	public function postAction(Request $request):array
 	{
 		$data = $request->parameters;
-		$data['message'] = 'This data was submitted';
-		return $data;
+
+		// item id set hence error
+		if(isset($request->url_elements[5])){
+
+			$response['message'] = 'ERROR: Bad Request';
+			$response['status'] = '0';
+			return $response;
+		}
+
+		// empty data, return status as 0
+		if(empty($data)){
+
+			$data['message'] = 'invalid item data';
+			$data['status'] = '0';
+			return $data;
+		}
+
+		$data_clean['name'] = htmlspecialchars(strip_tags($data['name']));
+		$data_clean['description'] = htmlspecialchars(strip_tags($data['description']));
+
+		// call create action on item model object		
+		$result = $this->item_model->create($data_clean);
+
+		if($result){
+			$data_clean['message'] = 'item was submitted';
+			$data_clean['status'] = '1';
+			return $data_clean;
+		} else{
+			$data['message'] = 'item was not submitted';
+			$data['status'] = '0';
+			return $data;
+		}
+		
 	}	 
 
 }

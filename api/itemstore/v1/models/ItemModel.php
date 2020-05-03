@@ -17,6 +17,10 @@ class ItemModel
 	 */
 	private $table = 'items';
 
+	private $name;
+
+	private $description;
+
 
 	/**
 	 * Class constructor
@@ -37,7 +41,7 @@ class ItemModel
 	 */
 	public function read(int $item_id=0):object
 	{
-		// create query to get collection 
+		// query to get collection 
 		$query = 'SELECT * FROM '. $this->table;
 
 		// add condition to get individual resource
@@ -45,14 +49,38 @@ class ItemModel
 			$query .= ' WHERE id = ' . $item_id;
 		}
 
-      // Prepare statement
+      // prepare statement
       $stmt = $this->conn->prepare($query);
 
-      // Execute query
+      // execute query
       $stmt->execute();
 
       return $stmt;
 
 	}
+
+	/**
+	 * method to create a resource
+	 * 
+	 * @param  array  $data to be created
+	 * @return boolean       
+	 */
+	public function create(array $data):bool
+	{
+		// query to insert data 
+		$query = "INSERT INTO "  . $this->table . " (name, description) VALUES (?, ?)"; 
+
+		$stmt = $this->conn->prepare($query);
+
+		$stmt->bindParam(1, $data['name']);
+		$stmt->bindParam(2, $data['description']);
+		
+		if($stmt->execute()){
+			return true;
+		}
+
+		return false;
+	}
+
 	
 }
