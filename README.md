@@ -1,6 +1,6 @@
 # CreateRESTfulAPIs
 
-This app creates RESTful service apis to list, show, edit & delete items and uses GET, POST, PUT & DELETE verbs. Used MVC architecture
+This app creates RESTful service apis to list, show, edit & delete items and uses GET, POST, PUT, PATCH & DELETE verbs. Used MVC architecture
 
 
 # Built
