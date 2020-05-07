@@ -113,7 +113,7 @@ class ItemModel
 
 		// query to update data 
 		$query = "UPDATE "  . $this->table . " SET ".$set." WHERE id = ?"; 
-
+		
 		$stmt = $this->conn->prepare($query);
 
 		$response = $stmt->execute(array($id));  

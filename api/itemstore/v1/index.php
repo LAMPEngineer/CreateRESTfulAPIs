@@ -25,10 +25,12 @@ $controller_name = ucfirst($request->url_elements[4]) . 'Controller';
 if(class_exists($controller_name)){
 	
 	$controller = new $controller_name();
-	// call action
-	$action_name = strtolower($request->verb) . 'Action';
 	
-	$result = $controller->$action_name($request);
+	// call action
+	$request_verb = strtolower($request->verb);
+
+	$result = $controller->controllerAction($request, $request_verb);
+
 	// view format
 	$view_name = ucfirst($request->format) . 'View';
 

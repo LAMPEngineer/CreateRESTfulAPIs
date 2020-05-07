@@ -22,6 +22,24 @@ class ItemsController
 	private $item_model;
 
 	/**
+	 * to hold request data
+	 * @var array
+	 */
+	private $data= array();
+
+	/**
+	 * to hold PDO result set object
+	 * @var object
+	 */
+	private $result;
+
+	/**
+	 * resourse ID
+	 * @var int
+	 */
+	private $item_id;
+
+	/**
 	 * construct initialize db connection object
 	 */
 	public function __construct()
@@ -34,305 +52,221 @@ class ItemsController
 	}
 
 	/**
-	 * Action for GET verb
-	 * for both individual resource 
-	 * as well as a collection
+	 * function to controll and check conditions for all requested
+	 * verbs - GET, POST, PUT, PATCH and DELETE
 	 * 
-	 * @param  Request $request object
-	 * @return array            response
+	 * @param  Request $request      object of Request
+	 * @param  string  $request_verb requested verb
+	 * @return array                 response
 	 */
-	public function getAction(Request $request):array
+	public function controllerAction(Request $request, string $request_verb):array
 	{
 
-		// get item id from request url
-		if(isset($request->url_elements[5])){
+		$this->data = $request->parameters;
 
-			$item_id = (int)$request->url_elements[5];
-
-			// invalid item id
-			if(($item_id == 0) or empty($item_id)){
-
-				$data['message'] = 'ERROR: Bad Request';
-				$data['status'] = '0';
-
-				return $data;
-
-			} else{
-				//get a resource
-				$data['message'] = 'here is the info of item '. $item_id;
-			}			
-		} else{
-			// get collection
-			$data['message'] = 'you want a list of items';
-			$item_id = '0';
-		}
-
-		// call read action on item model object		
-		$result = $this->item_model->read($item_id);
-
-		// get row count
-  		$num = $result->rowCount();
-  		if($num > 0){
-
-  			// fetch PDO result set
-  			$data['data'] = $result->fetchAll(PDO::FETCH_ASSOC);
-  			$data['status'] = '1';
-
-  		} else {
-
-  			$data['message'] = 'no data found';
-  			$data['status'] = '0';
-  		}		
-
-		return $data;
-	}
-
-	/**
-	 * Action for POST verb
-	 * for both individual resource 
-	 * as well as a collection
-	 * 
-	 * @param  Request $request object
-	 * @return array            response
-	 */
-	public function postAction(Request $request):array
-	{
-		$data = $request->parameters;
-
-		// item id set hence error
-		if(isset($request->url_elements[5])){
-
-			$response['message'] = 'ERROR: Bad Request';
-			$response['status'] = '0';
-			return $response;
-		}
-
-		// empty data, return status as 0
-		if(empty($data)){
-
-			$data['message'] = 'invalid item data';
-			$data['status'] = '0';
-			return $data;
-		}
-
-		$data_clean['name'] = htmlspecialchars(strip_tags($data['name']));
-		$data_clean['description'] = htmlspecialchars(strip_tags($data['description']));
-
-		// call create action on item model object		
-		$result = $this->item_model->create($data_clean);
-
-		if($result){
-			$data_clean['message'] = 'item was submitted';
-			$data_clean['status'] = '1';
-			return $data_clean;
-		} else{
-			$data['message'] = 'item was not submitted';
-			$data['status'] = '0';
-			return $data;
-		}
-		
-	}
-
-	/**
-	 * Action for PUT verb
-	 * for both individual resource 
-	 * as well as a collection
-	 * 
-	 * @param  Request $request object
-	 * @return array            response
-	 */
-	public function putAction(Request $request):array
-	{
-		$data = $request->parameters;
-		
 		// item id from request url
 		if(isset($request->url_elements[5])){
 
-			$item_id = (int)$request->url_elements[5];
+			// for POST ID not needed
+			if($request_verb=='post'){
+				return $response = array('message' => 'ERROR: Bad Request','status' => '0');
+			}
+
+
+			$this->item_id = (int)$request->url_elements[5];
 
 			// invalid item id
-			if(($item_id == 0) or empty($item_id)){
-
-				$response['message'] = 'ERROR: Bad Request';
-				$response['status'] = '0';
-
-				return $response;
-
-			} else{		
-
-				// call read action on item model object		
-				$result = $this->item_model->read($item_id);
-
-				// get row count
-		  		$num = $result->rowCount();
-
-		  		if($num > 0){		  			
-		  			//$data['message'] = 'you want to update item '. $item_id;
-
-		  			$data_clean['id'] = $item_id;
-
-		  			$data_clean['name'] = (!empty($data['name'])) ? htmlspecialchars(strip_tags($data['name'])) : null;
-
-					$data_clean['description'] = (!empty($data['description'])) ? htmlspecialchars(strip_tags($data['description'])) : null;
-
-					// call update action on item model object		
-					$result = $this->item_model->update($data_clean, $item_id);
-
-					if($result){
-						$response['message'] = 'item id ' . $item_id . ' : updated';
-						$response['status'] = '1';
-						return $response;
-					} else{
-						$response['message'] = 'item id ' . $item_id . ' : not updated';
-						$response['status'] = '0';
-						return $response;
-					}
-		  			
-		  		} else {
-
-		  			$response['message'] = 'ERROR: item not found';
-		  			$response['status'] = '0';
-		  		}
-			  		
-			}			
-		} else{
-			// get collection
-			$response['message'] = 'Bulk update curently not available!';
-			$response['status'] = '0';
-		}		
-
-		return $response;
-	}
-
-
-	/**
-	 * Action for PATCH verb
-	 * for individual resource 
-	 * 
-	 * @param  Request $request object
-	 * @return array            response
-	 */
-	public function patchAction(Request $request):array
-	{
-		$data = $request->parameters;
-		
-		// item id from request url
-		if(isset($request->url_elements[5])){
-
-			$item_id = (int)$request->url_elements[5];
-
-			// invalid item id
-			if(($item_id == 0) or empty($item_id)){
-
-				$response['message'] = 'ERROR: Bad Request';
-				$response['status'] = '0';
-
-				return $response;
-
-			} else{		
-
-				// call read action on item model object		
-				$result = $this->item_model->read($item_id);
-
-				// get row count
-		  		$num = $result->rowCount();
-
-		  		if($num > 0){		  			
-		  			
-		  			// fetch PDO result set
-  					$data_old = $result->fetchAll(PDO::FETCH_ASSOC);
-
-		  			$data_clean['id'] = $item_id;
-
-		  			foreach ($data_old[0] as $key => $value) {
-
-		  				if(array_key_exists($key, $data)) {
-
-		  					$data_clean[$key] = htmlspecialchars(strip_tags($data[$key]));
-		  					
-		  				} else{
-
-		  					$data_clean[$key] = $value;
-		  				}
-		  			}
-
-					// call update action on item model object		
-					$result = $this->item_model->update($data_clean, $item_id);
-
-					if($result){
-						$response['message'] = 'PATCHES - item id ' . $item_id . ' : updated';
-						$response['status'] = '1';
-						return $response;
-					} else{
-						$response['message'] = 'PATCHES  - item id ' . $item_id . ' : not updated';
-						$response['status'] = '0';
-						return $response;
-					}
-		  			
-		  		} else {
-
-		  			$response['message'] = 'ERROR: item not found';
-		  			$response['status'] = '0';
-		  		}
-			  		
-			}			
-		} else{
-			// get collection
-			$response['message'] = 'ERROR: Bad Request';
-			$response['status'] = '0';
-		}		
-
-		return $response;
-	}
-
-
-
-	/**
-	 * Action for DELETE verb
-	 * for both individual resource 
-	 * as well as a collection
-	 * 
-	 * @param  Request $request object
-	 * @return array            response
-	 */
-	public function deleteAction(Request $request):array
-	{
-		// item id from request url
-		if(isset($request->url_elements[5])){
-
-			$item_id = (int)$request->url_elements[5];
-
-			// invalid item id
-			if(($item_id == 0) or empty($item_id)){
+			if(($this->item_id == 0) or empty($this->item_id)){
 
 				$response = array('message' => 'ERROR: Bad Request','status' => '0');
 
 			} else{
 
 				// call read action on item model object		
-				$result = $this->item_model->read($item_id);
+				$this->result = $this->item_model->read($this->item_id);
 
 				// get row count
-		  		$num = $result->rowCount();
+		  		$num = $this->result->rowCount();
 
 		  		if($num > 0){
-			  		// call delete action on item model object		
-					$result = $this->item_model->delete($item_id);
 
-					$response = ($result) ? array('message' => 'item deleted','status' => '1') : array('message' => 'item not deleted','status' => '0');
+		  			switch ($request_verb) {
+
+		  				case 'get':
+	  						$response = $this->getAction();
+	  					break;
+
+	  					case 'put':
+	  						$response = $this->putAction();
+	  					break;
+
+	  					case 'patch':
+	  						$response = $this->patchAction();						
+						break;
+
+		  				case 'delete':
+		  					$response = $this->deleteAction();
+		  					break;
+		  				
+		  				default:
+		  					# code...
+		  					break;
+		  			}
 
 		  		} else {
 
-		  			$response = array('message' => 'ERROR: item id not found','status' => '0');
+		  			$response = array('message' => 'ERROR: resource id not found','status' => '0');
 		  		}
 
 			}			
 		} else {
-			// response for bulk delete
-			$response = array('message' => 'Bulk delete curently not available!','status' => '0');
+
+			// check for POST verb
+			if($request_verb == 'post'){
+
+				$response = $this->postAction();
+
+				return $response;	
+			}
+
+			// check if GET request is for list resource
+			if($request_verb == 'get'){
+
+				$response = $this->getAllAction();
+
+				return $response;				
+			}
+
+			// response for bulk action
+			$response = array('message' => 'Bulk action curently not available!','status' => '0');
 		}
 
 		return $response;
-	} 
+	}
+
+	/**
+	 * Action for GET verb to list resource 
+	 * 
+	 * @return array            response
+	 */
+	private function getAllAction(): array
+	{
+		// call read action on item model object		
+		$result = $this->item_model->read();
+
+		// fetch all PDO result set
+  		$data = $result->fetchAll(PDO::FETCH_ASSOC);
+
+		$response = array('message' => 'list resource ','status' => '1', 'data' => $data);
+
+		return $response;
+
+	}
+
+
+	/**
+	 * Action for GET verb to read an individual resource 
+	 * 
+	 * @return array            response
+	 */
+	private function getAction(): array
+	{
+		$data = $this->result->fetch(PDO::FETCH_ASSOC);
+
+		$response = array('message' => 'info of individual resource ','status' => '1', 'data' => $data);
+
+		return $response;
+	}
+
+	/**
+	 * Action for POST verb to create an individual resource 
+	 * 
+	 * @return array            response
+	 */
+	private function postAction(): array
+	{
+		// empty data, return status as 0
+		if(empty($this->data)){			
+			$response =	array('message' => 'invalid resource data','status' => '0');
+			return $response;			
+		}
+
+		$data_clean['name'] = htmlspecialchars(strip_tags($this->data['name']));
+		$data_clean['description'] = htmlspecialchars(strip_tags($this->data['description']));
+
+		// call create action on item model object		
+		$result = $this->item_model->create($data_clean);
+
+		$response = ($result) ? array('message' => 'resource submitted','status' => '1') : array('message' => 'resource not submitted','status' => '0');
+
+		return $response;
+
+	}
+
+	/**
+	 * Action for PUT verb to update an individual resource 
+	 * 
+	 * @return array            response
+	 */
+	private function putAction(): array
+	{
+		// fetch PDO result set
+		$data_old = $this->result->fetchAll(PDO::FETCH_ASSOC);			  			
+
+		foreach ($data_old[0] as $key => $value) {
+
+			$data_clean[$key] = (array_key_exists($key, $this->data)) ? htmlspecialchars(strip_tags($this->data[$key])) : null;
+		}
+
+		$data_clean['id'] = $this->item_id;
+
+
+		// call update action on item model object		
+		$result = $this->item_model->update($data_clean, $this->item_id);
+
+		$response = ($result) ? array('message' => 'resource updated','status' => '1') : array('message' => 'resource not updated','status' => '0');
+
+		return $response;
+
+	}
+
+	/**
+	 * Action for PATCH verb to update an individual resource 
+	 * 
+	 * @return array            response
+	 */
+	private function patchAction(): array
+	{
+	  	foreach ($this->data as $key => $value) {
+
+			$data_clean[$key] = (!empty($this->data[$key])) ? htmlspecialchars(strip_tags($this->data[$key])) : null;
+
+		}
+
+		$data_clean['id'] = $this->item_id;
+
+		// call update action on item model object		
+		$result = $this->item_model->update($data_clean, $this->item_id);
+
+		$response = ($result) ? array('message' => 'PATCHES - resource updated','status' => '1') : array('message' => 'PATCHES - resource not updated','status' => '0');
+
+		return $response;
+	}
+
+	/**
+	 * Action for DELETE verb to delete an individual resource 
+	 * 
+	 * @return array            response
+	 */
+	private function deleteAction(): array
+	{
+		// call delete action on item model object		
+		$result = $this->item_model->delete($this->item_id);
+
+		$response = ($result) ? array('message' => 'resource deleted','status' => '1') : array('message' => 'resource not deleted','status' => '0');
+
+		return $response;
+	}
+
 
 }
