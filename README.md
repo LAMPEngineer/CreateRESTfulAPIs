@@ -1,6 +1,6 @@
 # CreateRESTfulAPIs
 
-This app creates RESTful service apis to create, show, list, edit & delete item. It uses GET, POST, PUT, PATCH & DELETE verbs to perform actions. The API returns status 1 for a successful request along with additional data and status 0 for an unsuccessful request which is an error.
+App creates RESTful service apis to create, show, list, edit & delete item. It uses GET, POST, PUT, PATCH & DELETE verbs to perform actions. The API returns status 1 for a successful request along with additional data and status 0 for an unsuccessful request which is an error.
 
 
 # Built
