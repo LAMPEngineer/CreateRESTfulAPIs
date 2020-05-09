@@ -9,9 +9,9 @@ Used MVC architecture
 App is built on core PHP 7.2.5 and MySQL 5.6
 
 # URI structure
-URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}
+URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}
 
-Example: http://127.0.0.1:8080/api/itemstore/v1/items
+Example: http://127.0.0.1:8080/api/itemstore/v1/items/1
 
 
 # CRUD actions
