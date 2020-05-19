@@ -17,7 +17,13 @@ class ItemModel
 	 * table name
 	 * @var string
 	 */
-	private $table = 'items';
+	private $table;
+
+	// define properties
+	public $name;
+	public $description;
+	public $created_at;
+	public $updated_at;
 
 
 
@@ -28,6 +34,8 @@ class ItemModel
 	public function __construct($db)
 	{
 		$this->conn = $db;
+
+		$this->table = 'items';
 
 	}
 
@@ -70,23 +78,24 @@ class ItemModel
 	 * method to create a resource 
 	 * call from POST verb action
 	 * 
-	 * @param  array  $data to be created
 	 * @return boolean       
 	 */
-	public function create(array $data):bool
+	public function create():bool
 	{
-		// query to insert data 
-		$query = "INSERT INTO "  . $this->table . " (name, description) VALUES (?, ?)"; 
+
+		$query = "INSERT INTO "  . $this->table . " SET name = ?, description = ? ";
 
 		$stmt = $this->conn->prepare($query);
 
-		// bind param
-		$stmt->bindParam(1, $data['name']);
-		$stmt->bindParam(2, $data['description']);
-		
-		$response = $stmt->execute();
+		$stmt->bindParam(1, $this->name, PDO::PARAM_STR);
+		$stmt->bindParam(2, $this->description, PDO::PARAM_STR);
 
-		return $response;
+		if($stmt->execute()){
+			return true;
+		}
+
+		return false;
+
 	}
 
 

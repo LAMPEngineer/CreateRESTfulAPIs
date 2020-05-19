@@ -191,11 +191,11 @@ class ItemsController
 			return $response;			
 		}
 
-		$data_clean['name'] = htmlspecialchars(strip_tags($this->data['name']));
-		$data_clean['description'] = htmlspecialchars(strip_tags($this->data['description']));
+		$this->item_model->name = htmlspecialchars(strip_tags($this->data['name']));
+		$this->item_model->description = htmlspecialchars(strip_tags($this->data['description']));
 
 		// call create action on item model object		
-		$result = $this->item_model->create($data_clean);
+		$result = $this->item_model->create();
 
 		$response = ($result) ? array('message' => 'resource submitted','status' => '1') : array('message' => 'resource not submitted','status' => '0');
 
@@ -210,6 +210,11 @@ class ItemsController
 	 */
 	private function putAction(): array
 	{
+/*		echo "<pre>";
+		print_r($this->data);
+		echo "</pre>";
+		die;*/
+
 		// fetch PDO result set
 		$data_old = $this->result->fetchAll(PDO::FETCH_ASSOC);			  			
 
