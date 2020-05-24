@@ -210,10 +210,6 @@ class ItemsController
 	 */
 	private function putAction(): array
 	{
-/*		echo "<pre>";
-		print_r($this->data);
-		echo "</pre>";
-		die;*/
 
 		// fetch PDO result set
 		$data_old = $this->result->fetchAll(PDO::FETCH_ASSOC);			  			

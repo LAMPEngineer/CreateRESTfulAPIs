@@ -16,6 +16,6 @@ function apiAutoload($classname)
 		include __DIR__ . '/views/' . $classname . '.php';
 		return true;
 	} elseif (preg_match('/[a-zA-Z]+Config$/', $classname)) {
-		include __DIR__ . '/configs/' . $classname . '.php';
+		include __DIR__ . './../configs/' . $classname . '.php';
 	}
 }

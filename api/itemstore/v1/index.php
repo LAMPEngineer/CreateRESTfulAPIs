@@ -5,7 +5,6 @@
  *  response in right format as requested.
  *  
  */
-//ini_set("display_errors", 1);
 
 // check PATH_INFO
 if(!isset($_SERVER['PATH_INFO'])){
