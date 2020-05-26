@@ -20,6 +20,7 @@ class ItemModel
 	private $table;
 
 	// define properties
+	public $id;
 	public $name;
 	public $description;
 	public $created_at;
@@ -136,17 +137,17 @@ class ItemModel
 	 * method to delete a resource
 	 * call from DELETE verb action
 	 * 
-	 * @param  int|integer $id 		resource ID
 	 * @return boolean       
 	 */
-	public function delete(int $id):bool
+	//public function delete(int $id):bool
+	public function delete():bool
 	{
 		// query to delete data 
 		$query = "DELETE FROM `" . $this->table. "` WHERE id = ?";
 
 		$stmt = $this->conn->prepare($query);
 
-		$response = $stmt->execute(array($id));  
+		$response = $stmt->execute(array($this->id));  
 
 		return $response;
 	}

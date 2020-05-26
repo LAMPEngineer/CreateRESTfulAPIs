@@ -27,9 +27,7 @@ if(class_exists($controller_name)){
 	$controller = new $controller_name();
 	
 	// call action
-	$request_verb = strtolower($request->verb);
-
-	$result = $controller->controllerAction($request, $request_verb);
+	$result = $controller->processRequest($request);
 
 	// view format
 	$view_name = ucfirst($request->format) . 'View';
@@ -39,7 +37,6 @@ if(class_exists($controller_name)){
 		$view = new $view_name();
 		$view->render($result);		
 	}
-
 
 }
 
