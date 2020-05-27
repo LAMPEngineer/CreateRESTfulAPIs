@@ -30,6 +30,8 @@ class ItemsController extends MyController
 	 */
 	protected $item_id;
 
+
+
 	/**
 	 * construct initialize db connection object
 	 */
@@ -41,22 +43,30 @@ class ItemsController extends MyController
 		$this->item_model = new ItemModel($this->conn);
 	}
 
+
+
+
 	/**
 	 * to get row count for a resource 
 	 * @param  int $item_id - resource id
 	 * @return int     row count
 	 */
-	protected function getItemsResultSetRowCount($item_id): int
+	protected function getResultSetRowCount(): int
 	{
 		$num = 0;
 
-		// call read action on item model object		
-		$this->result = $this->item_model->read($item_id);
+		// call read action on item model object
+		$this->item_model->id = $this->item_id;		
+		$this->result = $this->item_model->read();
+
 		// get row count
 		 $num = $this->result->rowCount();
 
 		return $num;
 	}
+
+
+
 
 	/**
 	 * Action for GET verb to list resource 
@@ -65,7 +75,8 @@ class ItemsController extends MyController
 	 */
 	protected function getAllAction(): array
 	{
-		// call read action on item model object		
+		// call read action on item model object	
+		$this->item_model->id = 0;	
 		$result = $this->item_model->read();
 
 		// fetch all PDO result set
@@ -76,6 +87,8 @@ class ItemsController extends MyController
 		return $response;	
 
 	}
+
+
 
 
 	/**
@@ -91,6 +104,9 @@ class ItemsController extends MyController
 
 		return $response;
 	}
+
+
+
 
 	/**
 	 * Action for POST verb to create an individual resource 
@@ -117,6 +133,8 @@ class ItemsController extends MyController
 
 	}
 
+
+
 	/**
 	 * Action for PUT verb to update an individual resource 
 	 * 
@@ -129,21 +147,23 @@ class ItemsController extends MyController
 		$data_old = $this->result->fetchAll(PDO::FETCH_ASSOC);			  			
 
 		foreach ($data_old[0] as $key => $value) {
-
-			$data_clean[$key] = (array_key_exists($key, $this->data)) ? htmlspecialchars(strip_tags($this->data[$key])) : null;
+			// values to model
+			$this->item_model->$key = (array_key_exists($key, $this->data)) ? htmlspecialchars(strip_tags($this->data[$key])) : null;
 		}
 
-		$data_clean['id'] = $this->item_id;
+		$this->item_model->id = $this->item_id;
 
 
 		// call update action on item model object		
-		$result = $this->item_model->update($data_clean, $this->item_id);
+		$result = $this->item_model->putUpdate();
 
 		$response = ($result) ? array('message' => 'resource updated','status' => '1') : array('message' => 'resource not updated','status' => '0');
 
 		return $response;
 
 	}
+
+
 
 	/**
 	 * Action for PATCH verb to update an individual resource 
@@ -154,19 +174,21 @@ class ItemsController extends MyController
 	{
 	  	foreach ($this->data as $key => $value) {
 
-			$data_clean[$key] = (!empty($this->data[$key])) ? htmlspecialchars(strip_tags($this->data[$key])) : null;
+			// values to model
+			$this->item_model->$key = (!empty($this->data[$key])) ? htmlspecialchars(strip_tags($this->data[$key])) : null;
 
 		}
 
-		$data_clean['id'] = $this->item_id;
-
 		// call update action on item model object		
-		$result = $this->item_model->update($data_clean, $this->item_id);
+		$result = $this->item_model->update();
 
 		$response = ($result) ? array('message' => 'PATCHES - resource updated','status' => '1') : array('message' => 'PATCHES - resource not updated','status' => '0');
 
 		return $response;
 	}
+
+
+
 
 	/**
 	 * Action for DELETE verb to delete an individual resource 

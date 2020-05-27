@@ -20,7 +20,7 @@ class ItemModel
 	private $table;
 
 	// define properties
-	public $id;
+	public $id=0;
 	public $name;
 	public $description;
 	public $created_at;
@@ -45,18 +45,18 @@ class ItemModel
 
 	/**
 	 * method to read collection as well as a resource
-	 * call from GET verb action
+	 * from GET verb action call
 	 *  
 	 * @param  int|integer $id 			resource ID
 	 * @return object               	PODStatement Object
 	 */
-	public function read(int $id=0):object
+	public function read():object
 	{
 		// query to get collection 
 		$query = "SELECT * FROM ". $this->table;
 
 		// add condition to get individual resource
-		if($id != 0 ){
+		if($this->id != 0 ){
 			$query .= " WHERE id = :id";
 		}
 
@@ -64,7 +64,7 @@ class ItemModel
       $stmt = $this->conn->prepare($query);
 
       // bind param
-      $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+      $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
 
       // execute query
       $stmt->execute();
@@ -104,31 +104,83 @@ class ItemModel
 
 	/**
 	 * method to update a resource
-	 * call from PUT as well as PATCH verb actions
+	 * call from PATCH verb actions
 	 * 
-	 * @param  array  $data to be created
-	 * @param  int|integer $id 			resource ID
 	 * @return boolean       
 	 */
-	public function update(array $data, int $id):bool
+	public function update():bool
 	{
+		// fetch PDO result set
+		$result = $this->read();		
+		$data_old = $result->fetch(PDO::FETCH_ASSOC);
 
-		$set = '';
+		$set='';
 		$i=0;
-		foreach ($data as $key => $value) {
-			$set .= ($i>0?',':'').'`'. $key . '`=';
-			$set .= ($value === null?'NULL':'"'.$value.'"');
+		foreach ($data_old as $key => $value) {
+		
+			if(!empty($this->$key)){
+			$set .= ($i>0?',':'').'`'. $key . '`=';			
+			$set .= ($this->$key === null?'NULL':'"'.$this->$key.'"');	
+			} 
 			$i++;
 		}
 
 		// query to update data 
-		$query = "UPDATE "  . $this->table . " SET ".$set." WHERE id = ?"; 
-		
+		$query = "UPDATE "  . $this->table . " SET ".$set." WHERE id = :id"; 
+		//die;
 		$stmt = $this->conn->prepare($query);
 
-		$response = $stmt->execute(array($id));  
+		// bind param
+	    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
 
-		return $response;
+		if($stmt->execute()){
+			return true;
+		}
+
+		return false;
+	}
+
+
+
+	/**
+	 * method to update a resource
+	 * call from PUT verb actions
+	 * 
+	 * @return boolean       
+	 */
+	public function putUpdate():bool
+	{
+		// fetch PDO result set
+		$result = $this->read();		
+		$data_old = $result->fetch(PDO::FETCH_ASSOC);
+
+		$set='';
+		$i=0;
+		foreach ($data_old as $key => $value) {
+			$set .= ($i>0?',':'').'`'. $key . '`=';
+			if(!empty($this->$key)){			
+			$set .= ($this->$key === null?'NULL':'"'.$this->$key.'"');	
+			} else {
+				$set .= 'NULL';
+			}
+
+			$i++;
+		}
+
+		// query to update data 
+		$query = "UPDATE "  . $this->table . " SET ".$set." WHERE id = :id"; 
+
+		$stmt = $this->conn->prepare($query);
+
+		// bind param
+	    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+
+		if($stmt->execute()){
+			return true;
+		}
+
+		return false;
+
 	}
 
 
@@ -139,18 +191,23 @@ class ItemModel
 	 * 
 	 * @return boolean       
 	 */
-	//public function delete(int $id):bool
 	public function delete():bool
 	{
 		// query to delete data 
-		$query = "DELETE FROM `" . $this->table. "` WHERE id = ?";
+		$query = "DELETE FROM `" . $this->table. "` WHERE id = :id";
 
 		$stmt = $this->conn->prepare($query);
 
-		$response = $stmt->execute(array($this->id));  
+	    // bind param
+	    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
 
-		return $response;
+		if($stmt->execute()){
+			return true;
+		}
+
+		return false;
 	}
 
+	
 	
 }

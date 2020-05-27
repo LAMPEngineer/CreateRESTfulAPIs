@@ -25,7 +25,7 @@ class MyController
 	 * to hold ation id i.e resource id
 	 * @var int
 	 */
-	protected $action_id;
+	protected $resource_id;
 
 	/**
 	 * construct initialize db connection object
@@ -62,26 +62,28 @@ class MyController
 				return $response = array('message' => 'ERROR: Bad Request','status' => '0');
 			}
 			
-			$this->action_id = (int)$request->url_elements[5];
+			$this->resource_id = (int)$request->url_elements[5];
 
-			// invalid action id
-			if(($this->action_id == 0) or empty($this->action_id)){
+			// invalid resource id
+			if(($this->resource_id == 0) or empty($this->resource_id)){
 
 				$response = array('message' => 'ERROR: Bad Request','status' => '0');
 
 			} else{
 
 				// create resource id variable and pass action id
-				$resource_id = substr($this->controller, 0, -1).'_id';
-				$this->$resource_id = $this->action_id;
+				$resource_id_str = substr($this->controller, 0, -1).'_id';
+				$this->$resource_id_str = $this->resource_id;
 
-				// get controller's result set row count with dynamic variable
-				$get_result_set_number = 'get'.$this->controller.'ResultSetRowCount';
-				$num = $this->$get_result_set_number($this->action_id);
+				// get resource result set row count 
+				$num = $this->getResultSetRowCount();
 		  	
 		  		if($num > 0){
 
-		  			// call action i.e getAction, putAction, patchAction & deleteAction
+		  			 /*
+		  			  * call action acording to GET, PUT,
+		  			  *	 PATCH & DELETE verb
+		  			  */
 		  			$action = $request_verb.'Action';
 
 		  			$response = $this->$action();
