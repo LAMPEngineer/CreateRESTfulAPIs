@@ -36,6 +36,12 @@ class MyController
 	protected $request_verb;
 
 	/**
+	 * to hold requested output format
+	 * @var string
+	 */
+	protected $format;
+
+	/**
 	 * construct initialize db connection object
 	 */
 	public function __construct()
@@ -54,12 +60,17 @@ class MyController
 	 */
 	public function processRequest(Request $request):array
 	{
-		// request verb
+		// requested verb
 		$this->request_verb = strtolower($request->verb);
 
+		// requested controller
 		$this->controller = $request->url_elements[4];
 
+		// requested data
 		$this->data = $request->parameters;
+
+		// requested format
+		$this->format = $request->format;
 
 		// action id from request url
 		if(isset($request->url_elements[5])){
@@ -126,5 +137,56 @@ class MyController
 		return $response;
 	}
 
+	public function validateParameter($fieldName, $value, $dataType, $required = true)
+	{
+		if($required == true && empty($value) == true){
+			return array('message' => $fieldName.' parameter is required.','status' => '0');
+		}
+
+		switch ($dataType) {
+			
+			case 'BOOLEAN':
+				if (!is_bool($value)) {
+
+					$this->throwError('0', 'Data type is not valid for '. $fieldName);
+				}
+				break;
+
+			case 'INTEGER':
+				if (!is_numeric($value)) {
+					$this->throwError('0', 'Data type is not valid for '. $fieldName);
+				}
+				break;
+
+			case 'STRING':
+				if (!is_string($value)) {
+					$this->throwError('0', 'Data type is not valid for '. $fieldName);
+				}				
+				break;
+			
+			default:
+				$this->throwError('0', 'Data type is not valid for '. $fieldName);
+				break;
+		}
+
+		return $value;
+
+	}
+
+	public function throwError($code, $message)
+	{
+		$content = array('message' => $message,'status' => $code);
+
+		// view format
+		$view_name = ucfirst($this->format) . 'View';
+
+		if(class_exists($view_name)){
+
+			$view = new $view_name();
+			$view->render($content);		
+		}
+
+		exit;		
+	}
 
 }

@@ -121,8 +121,17 @@ class ItemsController extends MyController
 			return $response;			
 		}
 
-		$this->item_model->name = htmlspecialchars(strip_tags($this->data['name']));
-		$this->item_model->description = htmlspecialchars(strip_tags($this->data['description']));
+		// validation
+		$name = $this->validateParameter('name', $this->data['name'], 'STRING', false);
+
+		$description = $this->validateParameter('description', $this->data['description'], 'STRING', false);
+
+
+		// param to model
+		$this->item_model->name = htmlspecialchars(strip_tags($name));		
+
+		$this->item_model->description = htmlspecialchars(strip_tags($description));
+
 
 		// call create action on item model object		
 		$result = $this->item_model->create();
