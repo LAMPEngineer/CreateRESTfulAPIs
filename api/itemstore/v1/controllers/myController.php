@@ -28,6 +28,14 @@ class MyController
 	protected $resource_id;
 
 	/**
+	 * to hold request verb in lower case
+	 * i.e get, post, put, patch & delete
+	 * 
+	 * @var string
+	 */
+	protected $request_verb;
+
+	/**
 	 * construct initialize db connection object
 	 */
 	public function __construct()
@@ -42,13 +50,12 @@ class MyController
 	 * verbs - GET, POST, PUT, PATCH and DELETE
 	 * 
 	 * @param  Request $request      object of Request
-	 * @param  string  $request_verb requested verb
 	 * @return array                 response
 	 */
 	public function processRequest(Request $request):array
 	{
 		// request verb
-		$request_verb = strtolower($request->verb);
+		$this->request_verb = strtolower($request->verb);
 
 		$this->controller = $request->url_elements[4];
 
@@ -58,7 +65,7 @@ class MyController
 		if(isset($request->url_elements[5])){
 
 			// for POST ID not needed
-			if($request_verb=='post'){
+			if($this->request_verb=='post'){
 				return $response = array('message' => 'ERROR: Bad Request','status' => '0');
 			}
 			
@@ -84,7 +91,7 @@ class MyController
 		  			  * call action acording to GET, PUT,
 		  			  *	 PATCH & DELETE verb
 		  			  */
-		  			$action = $request_verb.'Action';
+		  			$action = $this->request_verb.'Action';
 
 		  			$response = $this->$action();
 		  			
@@ -97,7 +104,7 @@ class MyController
 		} else {
 
 			// check for POST verb
-			if($request_verb == 'post'){
+			if($this->request_verb == 'post'){
 
 				$response = $this->postAction();
 
@@ -105,7 +112,7 @@ class MyController
 			}
 
 			// check if GET request is for list resource
-			if($request_verb == 'get'){
+			if($this->request_verb == 'get'){
 
 				$response = $this->getAllAction();
 

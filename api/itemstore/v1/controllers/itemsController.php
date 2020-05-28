@@ -154,8 +154,11 @@ class ItemsController extends MyController
 		$this->item_model->id = $this->item_id;
 
 
-		// call update action on item model object		
-		$result = $this->item_model->putUpdate();
+		/**
+		 * call update action on item model object
+		 * @param string $request_verb [put or patch]
+		 */		 	
+		$result = $this->item_model->update($this->request_verb);
 
 		$response = ($result) ? array('message' => 'resource updated','status' => '1') : array('message' => 'resource not updated','status' => '0');
 
@@ -180,7 +183,7 @@ class ItemsController extends MyController
 		}
 
 		// call update action on item model object		
-		$result = $this->item_model->update();
+		$result = $this->item_model->update($this->request_verb);
 
 		$response = ($result) ? array('message' => 'PATCHES - resource updated','status' => '1') : array('message' => 'PATCHES - resource not updated','status' => '0');
 

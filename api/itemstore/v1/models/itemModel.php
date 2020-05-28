@@ -104,11 +104,12 @@ class ItemModel
 
 	/**
 	 * method to update a resource
-	 * call from PATCH verb actions
+	 * call from PATCH and PUT verb actions
 	 * 
+	 * @param  string $request_verb i.e PUT & PATCH
 	 * @return boolean       
 	 */
-	public function update():bool
+	public function update($request_verb):bool
 	{
 		// fetch PDO result set
 		$result = $this->read();		
@@ -117,51 +118,25 @@ class ItemModel
 		$set='';
 		$i=0;
 		foreach ($data_old as $key => $value) {
-		
-			if(!empty($this->$key)){
-			$set .= ($i>0?',':'').'`'. $key . '`=';			
-			$set .= ($this->$key === null?'NULL':'"'.$this->$key.'"');	
-			} 
-			$i++;
-		}
 
-		// query to update data 
-		$query = "UPDATE "  . $this->table . " SET ".$set." WHERE id = :id"; 
-		//die;
-		$stmt = $this->conn->prepare($query);
+			if($request_verb=='patch'){
 
-		// bind param
-	    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+				// make $set string for PATCH request
+				if(!empty($this->$key)){
+				$set .= ($i>0?',':'').'`'. $key . '`=';			
+				$set .= ($this->$key === null?'NULL':'"'.$this->$key.'"');	
+				} 
 
-		if($stmt->execute()){
-			return true;
-		}
+			}elseif($request_verb=='put'){
 
-		return false;
-	}
+				// make $set string for PUT request
+				$set .= ($i>0?',':'').'`'. $key . '`=';
+				if(!empty($this->$key)){			
+				$set .= ($this->$key === null?'NULL':'"'.$this->$key.'"');	
+				} else {
+					$set .= 'NULL';
+				}
 
-
-
-	/**
-	 * method to update a resource
-	 * call from PUT verb actions
-	 * 
-	 * @return boolean       
-	 */
-	public function putUpdate():bool
-	{
-		// fetch PDO result set
-		$result = $this->read();		
-		$data_old = $result->fetch(PDO::FETCH_ASSOC);
-
-		$set='';
-		$i=0;
-		foreach ($data_old as $key => $value) {
-			$set .= ($i>0?',':'').'`'. $key . '`=';
-			if(!empty($this->$key)){			
-			$set .= ($this->$key === null?'NULL':'"'.$this->$key.'"');	
-			} else {
-				$set .= 'NULL';
 			}
 
 			$i++;
@@ -169,7 +144,7 @@ class ItemModel
 
 		// query to update data 
 		$query = "UPDATE "  . $this->table . " SET ".$set." WHERE id = :id"; 
-
+	
 		$stmt = $this->conn->prepare($query);
 
 		// bind param
@@ -180,8 +155,8 @@ class ItemModel
 		}
 
 		return false;
-
 	}
+
 
 
 
