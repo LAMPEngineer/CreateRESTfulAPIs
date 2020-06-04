@@ -19,12 +19,6 @@ class ItemsController extends MyController
 	protected $data= array();
 
 	/**
-	 * to hold PDO result set object
-	 * @var object
-	 */
-	protected $result;
-
-	/**
 	 * resourse ID
 	 * @var int
 	 */
@@ -48,7 +42,6 @@ class ItemsController extends MyController
 
 	/**
 	 * to get row count for a resource 
-	 * @param  int $item_id - resource id
 	 * @return int     row count
 	 */
 	protected function getResultSetRowCount(): int
@@ -56,11 +49,10 @@ class ItemsController extends MyController
 		$num = 0;
 
 		// call read action on item model object
-		$this->item_model->id = $this->item_id;		
-		$this->result = $this->item_model->read();
+		$this->item_model->setId($this->item_id);
 
 		// get row count
-		 $num = $this->result->rowCount();
+		 $num = $this->item_model->getResultSetRowCountById();
 
 		return $num;
 	}
@@ -75,16 +67,12 @@ class ItemsController extends MyController
 	 */
 	protected function getAllAction(): array
 	{
-		// call read action on item model object	
-		$this->item_model->id = 0;	
-		$result = $this->item_model->read();
+	  // call read action on item model object			
+	  $data = $this->item_model->getAllItems();
 
-		// fetch all PDO result set
-  		$data = $result->fetchAll(PDO::FETCH_ASSOC);
+	  $response = array('message' => 'list resource ','status' => '1', 'data' => $data);
 
-		$response = array('message' => 'list resource ','status' => '1', 'data' => $data);
-
-		return $response;	
+	  return $response;	
 
 	}
 
@@ -98,7 +86,7 @@ class ItemsController extends MyController
 	 */
 	protected function getAction(): array
 	{
-		$data = $this->result->fetch(PDO::FETCH_ASSOC);
+		$data = $this->item_model->getItemDetailsById();
 
 		$response = array('message' => 'info of individual resource ','status' => '1', 'data' => $data);
 
@@ -121,20 +109,26 @@ class ItemsController extends MyController
 			return $response;			
 		}
 
-		// validation
-		$name = $this->validateParameter('name', $this->data['name'], 'STRING', false);
+		$item_table_fields = $this->item_model->getItemTableFields();
 
-		$description = $this->validateParameter('description', $this->data['description'], 'STRING', false);
+		foreach ($this->data as $key => $value) {
 
+		  // get values
+		  $setter_value = (array_key_exists($key, $item_table_fields)) ? $key : null;
 
-		// param to model
-		$this->item_model->name = htmlspecialchars(strip_tags($name));		
+		  if (!empty($setter_value)) {
 
-		$this->item_model->description = htmlspecialchars(strip_tags($description));
+		  	 // validation
+		    $setter_value = $this->validateParameter($key, $this->data[$key], false);
+		  	
+		    // values to model
+		    $this->setItemSetterMethodWithValue($key, $setter_value);
+		  }
 
+		}
 
-		// call create action on item model object		
-		$result = $this->item_model->create();
+		// call insert action on item model object		
+		$result = $this->item_model->insert();
 
 		$response = ($result) ? array('message' => 'resource submitted','status' => '1') : array('message' => 'resource not submitted','status' => '0');
 
@@ -152,20 +146,29 @@ class ItemsController extends MyController
 	protected function putAction(): array
 	{
 
-		// fetch PDO result set
-		$data_old = $this->result->fetchAll(PDO::FETCH_ASSOC);			  			
+		$data_old = $this->item_model->getItemDetailsById();
 
-		foreach ($data_old[0] as $key => $value) {
-			// values to model
-			$this->item_model->$key = (array_key_exists($key, $this->data)) ? htmlspecialchars(strip_tags($this->data[$key])) : null;
+		foreach ($data_old as $key => $value) {
+
+  		  // get values
+		  $setter_value = (array_key_exists($key, $this->data)) ? $this->data[$key] : null;
+		  if (!empty($setter_value)) {
+
+		  	// validation
+		    $setter_value = $this->validateParameter($key, $setter_value, false);
+		  	
+		    // values to model
+		    $this->setItemSetterMethodWithValue($key, $setter_value);
+		  } 
+
 		}
 
-		$this->item_model->id = $this->item_id;
+		$this->item_model->setId($this->item_id);
 
 
 		/**
 		 * call update action on item model object
-		 * @param string $request_verb [put or patch]
+		 * @param string $request_verb [put]
 		 */		 	
 		$result = $this->item_model->update($this->request_verb);
 
@@ -184,13 +187,26 @@ class ItemsController extends MyController
 	 */
 	protected function patchAction(): array
 	{
-	  	foreach ($this->data as $key => $value) {
 
-			// values to model
-			$this->item_model->$key = (!empty($this->data[$key])) ? htmlspecialchars(strip_tags($this->data[$key])) : null;
+		$item_table_fields = $this->item_model->getItemTableFields();
+
+	  	//foreach ($this->data as $key => $value) {
+	  	foreach ($item_table_fields as $key => $value) {
+
+		  if (!empty($this->data[$key])) {
+
+		  	  // get values	
+		  	  $setter_value = $this->data[$key];
+
+		  	  // validation
+		  	  $setter_value = $this->validateParameter($key, $setter_value, false);
+		  	  // values to model
+		  	  $this->setItemSetterMethodWithValue($key, $setter_value);
+
+		  } 
 
 		}
-
+ 			
 		// call update action on item model object		
 		$result = $this->item_model->update($this->request_verb);
 
@@ -210,7 +226,7 @@ class ItemsController extends MyController
 	protected function deleteAction(): array
 	{
 		// call delete action on item model object	
-		$this->item_model->id = $this->item_id;
+		$this->item_model->setId($this->item_id);
 
 		$result = $this->item_model->delete();
 
@@ -219,5 +235,26 @@ class ItemsController extends MyController
 		return $response;
 	}
 
+
+	/**
+	 *  Dynamically create setter and pass value to it
+	 *  to set into model  
+	 *  
+	 * @param string $setter_key   key to creaye setter
+	 * @param string $setter_value value to pass into setter 
+	 *
+	 * @return boolean
+	 */
+    protected function setItemSetterMethodWithValue($setter_key, $setter_value): bool
+    {
+    	$item_table_fields = $this->item_model->getItemTableFields();
+
+    	$setter_method = 'set'.ucfirst($item_table_fields[$setter_key]['method']);
+
+		$this->item_model->$setter_method($setter_value);
+
+		return true;
+
+    }
 
 }
