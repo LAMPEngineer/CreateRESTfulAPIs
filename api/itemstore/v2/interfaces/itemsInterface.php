@@ -4,32 +4,13 @@ interface ItemsInterface
 {
 
 	/**
-	 * to hold item model object
-	 * @var object
-	 */
-	//protected $item_model;
-
-	/**
-	 * to hold request data
-	 * @var array
-	 */
-	//protected $data= array();
-
-	/**
-	 * resourse ID
-	 * @var int
-	 */
-	//protected $item_id;
-	
-
-	/**
 	 * function to check and process all request
 	 * verbs - GET, POST, PUT, PATCH and DELETE
 	 * 
 	 * @param  Request $request      object of Request
 	 * @return array                 response
 	 */
-	function processRequest(Request $request):array;
+	function processRequest(RequestInterface $request):array;
 
 	/**
 	 * Action for GET verb to list resource 

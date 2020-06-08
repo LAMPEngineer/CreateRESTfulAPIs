@@ -3,7 +3,7 @@
 /**
  * Item model to run actions on DB
  */
-class ItemModel
+class ItemModel implements ItemsModelInterface
 {
 
 	/**
@@ -55,6 +55,11 @@ class ItemModel
 	}
 
 
+	/**
+	 * To get all items
+	 * 
+	 * @return [array] items array
+	 */
 	public function getAllItems(): array 
 	{
       // prepare statement
@@ -66,6 +71,12 @@ class ItemModel
 
 	}
 
+
+	/**
+	 *  To get item by Id
+	 *  
+	 * @return [array] item array
+	 */
 	public function getItemDetailsById(): array
 	{	
       $stmt =  $this->getResultSetById();
@@ -75,6 +86,11 @@ class ItemModel
 	}
 
 
+	/**
+	 *  To get result set row count
+	 *  
+	 * @return [integer] result set count
+	 */
 	public function getResultSetRowCountById():int 
 	{
 	  $num = 0;

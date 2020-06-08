@@ -2,7 +2,7 @@
 /**
  *  Json view 
  */
-class JsonView
+class JsonView implements FormatInterface
 {
 	/**
 	 * Json view format

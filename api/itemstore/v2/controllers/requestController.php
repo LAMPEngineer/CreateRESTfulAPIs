@@ -2,7 +2,7 @@
 /*
  *  Request handler to handle the RESTful requests
  */
-class RequestController
+class RequestController implements RequestInterface
 {
 	/**
 	 * request url elements

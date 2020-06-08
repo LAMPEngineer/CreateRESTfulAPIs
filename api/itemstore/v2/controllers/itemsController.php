@@ -65,7 +65,7 @@ class ItemsController extends MyController implements ItemsInterface
 	 * 
 	 * @return array   response
 	 */
-	protected function getAllAction(): array
+	function getAllAction(): array
 	{
 	  // call read action on item model object			
 	  $data = $this->item_model->getAllItems();
@@ -84,7 +84,7 @@ class ItemsController extends MyController implements ItemsInterface
 	 * 
 	 * @return array   response
 	 */
-	protected function getAction(): array
+	function getAction(): array
 	{
 		$data = $this->item_model->getItemDetailsById();
 
@@ -101,7 +101,7 @@ class ItemsController extends MyController implements ItemsInterface
 	 * 
 	 * @return array   response
 	 */
-	protected function postAction(): array
+	function postAction(): array
 	{
 		// empty data, return status as 0
 		if(empty($this->data)){			
@@ -143,7 +143,7 @@ class ItemsController extends MyController implements ItemsInterface
 	 * 
 	 * @return array   response
 	 */
-	protected function putAction(): array
+	function putAction(): array
 	{
 
 		$data_old = $this->item_model->getItemDetailsById();
@@ -185,7 +185,7 @@ class ItemsController extends MyController implements ItemsInterface
 	 * 
 	 * @return array   response
 	 */
-	protected function patchAction(): array
+	function patchAction(): array
 	{
 
 		$item_table_fields = $this->item_model->getItemTableFields();
@@ -223,7 +223,7 @@ class ItemsController extends MyController implements ItemsInterface
 	 * 
 	 * @return array     response
 	 */
-	protected function deleteAction(): array
+	function deleteAction(): array
 	{
 		// call delete action on item model object	
 		$this->item_model->setId($this->item_id);
@@ -256,5 +256,92 @@ class ItemsController extends MyController implements ItemsInterface
 		return true;
 
     }
+
+	/**
+	 * function to check and process all request
+	 * verbs - GET, POST, PUT, PATCH and DELETE
+	 * 
+	 * @param  Request $request      object of Request
+	 * @return array                 response
+	 */
+	function processRequest(RequestInterface $request):array
+	{
+		// requested verb
+		$this->request_verb = strtolower($request->verb);
+
+		// requested controller
+		$this->controller = $request->url_elements[1];
+
+		// requested data
+		$this->data = $request->parameters;
+
+		// requested format
+		$this->format = $request->format;
+
+		// action id from request url
+		if(isset($request->url_elements[2])){
+
+			// for POST ID not needed
+			if($this->request_verb=='post'){
+				return $response = array('message' => 'ERROR: Bad Request','status' => '0');
+			}
+			
+			$this->resource_id = (int)$request->url_elements[2];
+
+			// invalid resource id
+			if(($this->resource_id == 0) or empty($this->resource_id)){
+
+				$response = array('message' => 'ERROR: Bad Request','status' => '0');
+
+			} else{
+
+				// create resource id variable and pass action id
+				$resource_id_str = substr($this->controller, 0, -1).'_id';
+				$this->$resource_id_str = $this->resource_id;
+
+				// get resource result set row count 
+				$num = $this->getResultSetRowCount();
+		  	
+		  		if($num > 0){
+
+		  			 /*
+		  			  * call action acording to GET, PUT,
+		  			  *	 PATCH & DELETE verb
+		  			  */
+		  			$action = $this->request_verb.'Action';
+
+		  			$response = $this->$action();
+		  			
+		  		} else {
+
+		  			$response = array('message' => 'ERROR: resource id not found','status' => '0');
+		  		}
+
+			}			
+		} else {
+
+			// check for POST verb
+			if($this->request_verb == 'post'){
+
+				$response = $this->postAction();
+
+				return $response;	
+			}
+
+			// check if GET request is for list resource
+			if($this->request_verb == 'get'){
+
+				$response = $this->getAllAction();
+
+				return $response;				
+			}
+
+			// response for bulk action
+			$response = array('message' => 'Bulk action curently not available!','status' => '0');
+		}
+
+		return $response;
+	}
+
 
 }

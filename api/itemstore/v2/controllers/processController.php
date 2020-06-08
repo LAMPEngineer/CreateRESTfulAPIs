@@ -3,15 +3,15 @@
 class ProcessController
 {
 
-	$request;
+	protected $request;
 
-	$controller;
+	protected $controller;
 
-	$view;
+	protected $view;
 
-	public function __construct(RequestInterface $request_interface, ItemInterface $item_interface, FormatInterface $format_interface)
+	public function __construct(RequestInterface $request_interface, ItemsInterface $item_interface, FormatInterface $format_interface)
 	{
-		$this->request_interface = $request_interface;
+		$this->request = $request_interface;
 
 		$this->controller = $item_interface;
 
@@ -25,9 +25,9 @@ class ProcessController
 		$request = new RequestController();*/
 
 		// route the request to the right place
-		echo $controller_name = ucfirst($this->request->url_elements[1]) . 'Controller';
+		$controller_name = ucfirst($this->request->url_elements[1]) . 'Controller';
 
-		die;
+		
 		if(class_exists($controller_name)){
 			
 			//$controller = new $controller_name();
