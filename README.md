@@ -7,15 +7,6 @@ App creates RESTful service apis to create, show, list, edit & delete item. It u
 App is built on core PHP 7.2.5 and MySQL 5.6
 
 
-# V1 [version 1]
-
-
-# URI structure
-URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}
-
-Example: http://127.0.0.1:8080/api/itemstore/v1/items/1
-
-
 # CRUD actions
 ![CURD_actions.jpg](./img/CURD_actions.jpg)
 
@@ -33,12 +24,23 @@ Example: http://127.0.0.1:8080/api/itemstore/v1/items/1
 
 Exapmle: /api/itemstore/v1/items/       
          
-     
+
+# V1 [version 1]
+
+
+# URI structure
+URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}
+
+
+Example: http://127.0.0.1:8080/api/itemstore/v1/items/1
+
+
 # Architecture
 
 Used MVC architecture
 
 ![architecture_create_rest_api.jpg](./img/architecture_create_rest_api.jpg)
+
 
 
 
