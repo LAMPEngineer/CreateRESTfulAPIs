@@ -58,7 +58,7 @@ class MyController
 	 * @param  Request $request      object of Request
 	 * @return array                 response
 	 */
-	public function processRequest(Request $request):array
+	function processRequest(Request $request):array
 	{
 		// requested verb
 		$this->request_verb = strtolower($request->verb);

@@ -15,13 +15,12 @@ if(!isset($_SERVER['PATH_INFO'])){
 //autoload 
 include __DIR__ . '\autoload.php';
 
+/*
 // request object
 $request = new RequestController();
 
-/*print_r($request->url_elements);
-die;*/
 // route the request to the right place
-$controller_name = ucfirst($request->url_elements[1]) . 'Controller';
+$controller_name = ucfirst($request->url_elements[4]) . 'Controller';
 
 
 if(class_exists($controller_name)){
@@ -42,4 +41,10 @@ if(class_exists($controller_name)){
 
 }
 
+*/
 
+$request = new RequestController();
+$controller = new ItemsController();
+$view = new JsonView();
+$process = new ProcessController($request, $controller, $view);
+$process->process();
