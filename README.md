@@ -37,3 +37,16 @@ Used MVC architecture
 
 ![architecture_create_rest_api.jpg](./img/architecture_create_rest_api.jpg)
 
+
+
+
+# V2 [version 2]
+
+Program to interfaces, not implementations
+
+# URI
+
+http://127.0.0.1:8080/api/itemstore/v2/items/1
+
+
+
