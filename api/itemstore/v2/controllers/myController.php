@@ -9,23 +9,6 @@ use RequestController as Request;
 
 class MyController
 {
-	/**
-	 * to hold db connection object
-	 * @var object
-	 */
-	protected $conn;
-
-
-	/**
-	 * construct initialize db connection object
-	 */
-	public function __construct()
-	{
-		$db = new DatabaseConfig;
-		$this->conn = $db->connect();
-
-	}
-
 
 	/**
 	 *  Validate parameter for string, int, boolean etc.

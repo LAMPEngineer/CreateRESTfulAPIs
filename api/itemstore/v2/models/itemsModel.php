@@ -3,7 +3,7 @@
 /**
  * Item model to run actions on DB
  */
-class ItemModel implements ItemsModelInterface
+class ItemsModel implements ItemsModelInterface
 {
 
 	/**

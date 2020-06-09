@@ -29,12 +29,10 @@ class ItemsController extends MyController implements ItemsInterface
 	/**
 	 * construct initialize db connection object
 	 */
-	public function __construct()
+	public function __construct(ItemsModelInterface $items_model_interface)
 	{
-		parent::__construct();
-
 		//Get item model object
-		$this->item_model = new ItemModel($this->conn);
+		$this->item_model = $items_model_interface;
 	}
 
 

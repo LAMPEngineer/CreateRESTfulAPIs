@@ -15,17 +15,28 @@ if(!isset($_SERVER['PATH_INFO'])){
 //autoload 
 include __DIR__ . '\autoload.php';
 
-/*
+
 // request object
 $request = new RequestController();
 
 // route the request to the right place
-$controller_name = ucfirst($request->url_elements[4]) . 'Controller';
+$action_name = ucfirst($request->url_elements[1]) ;
 
+$controller_name = $action_name . 'Controller';
 
 if(class_exists($controller_name)){
 	
-	$controller = new $controller_name();
+	// PDO db object
+	$db = new DatabaseConfig;
+	$conn = $db->connect();
+
+	// model object
+	$model_name = $action_name . 'Model';
+	$model = new $model_name($conn);
+
+
+	//$controller object 
+	$controller = new $controller_name($model);
 	
 	// call action
 	$result = $controller->processRequest($request);
@@ -41,10 +52,3 @@ if(class_exists($controller_name)){
 
 }
 
-*/
-
-$request = new RequestController();
-$controller = new ItemsController();
-$view = new JsonView();
-$process = new ProcessController($request, $controller, $view);
-$process->process();
