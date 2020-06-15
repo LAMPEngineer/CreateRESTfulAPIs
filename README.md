@@ -50,6 +50,11 @@ Used MVC architecture
 Program to interfaces, not implementations
 
 
+# Objet Container Interface
+
+Implemented PSR-11
+
+
 # URI structure
 
 URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}
