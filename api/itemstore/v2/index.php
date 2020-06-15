@@ -15,9 +15,11 @@ if(!isset($_SERVER['PATH_INFO'])){
 //autoload 
 include __DIR__ . '\autoload.php';
 
+$container = new ContainerController();
+
 
 // request object
-$request = new RequestController();
+$request = $container->get('RequestController');
 
 // route the request to the right place
 $action_name = ucfirst($request->url_elements[1]) ;
@@ -27,16 +29,16 @@ $controller_name = $action_name . 'Controller';
 if(class_exists($controller_name)){
 	
 	// PDO db object
-	$db = new DatabaseConfig;
+	$db = $container->get('DatabaseConfig');
 	$conn = $db->connect();
 
 	// model object
 	$model_name = $action_name . 'Model';
-	$model = new $model_name($conn);
 
+	$model = $container->get($model_name, $conn);
 
 	//$controller object 
-	$controller = new $controller_name($model);
+	$controller = $container->get($controller_name, $model);
 	
 	// call action
 	$result = $controller->processRequest($request);
@@ -46,7 +48,7 @@ if(class_exists($controller_name)){
 
 	if(class_exists($view_name)){
 
-		$view = new $view_name();
+		$view = $container->get($view_name);
 		$view->render($result);		
 	}
 
