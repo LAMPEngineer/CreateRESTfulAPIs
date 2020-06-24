@@ -50,7 +50,7 @@ Used MVC architecture
 Program to interfaces, not implementations
 
 
-# Objet Container Interface
+# Object Container Interface
 
 Implemented PSR-11
 
