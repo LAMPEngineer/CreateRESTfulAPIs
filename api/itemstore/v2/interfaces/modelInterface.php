@@ -17,7 +17,7 @@ interface ModelInterface
 
 	public function delete():bool;
 
-	//public function getItemTableFields(): array;
+	//public function getTableFields(): array;
 
 	
 }

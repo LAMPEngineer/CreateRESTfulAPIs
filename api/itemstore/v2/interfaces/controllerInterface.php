@@ -3,6 +3,11 @@
 interface ControllerInterface
 {
 
+	// setter methods
+	public function setData($data);
+	public function setFormat($format);
+	public function setId($id);
+
 
 	/**
 	 * Action for GET verb to list resource 

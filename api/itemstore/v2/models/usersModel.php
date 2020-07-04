@@ -19,10 +19,10 @@ class UsersModel extends MyModel implements ModelInterface
 	protected $table;
 
 	// define table properties
-	private $id;
-	private $name;
-	private $email;
-	private $password;
+	protected $id;
+	protected $name;
+	protected $email;
+	protected $password;
 
 	// setter and getter
 	public function setId($id){ $this->id = $id; }
@@ -51,67 +51,6 @@ class UsersModel extends MyModel implements ModelInterface
 	}
 
 
-	/**
-	 * method to create a resource 
-	 * call from POST verb action
-	 * 
-	 * @return boolean       
-	 */
-	public function insert():bool
-	{
-		// get model table fields
-		$item_table_fields = $this->getUserTableFields();
-
-		$set='';
-		$i=0;
-		$bind_param_array = array();
-
-		// make SET and $bindParam variable
-		foreach ($item_table_fields as $key => $value) {
-
-			if (!empty($this->$key)) {
-
-				$set .= ($i>0?',':'').'`'. $key . '`= :' .$key;	
-
-				$bind_param_array[$key] =  $this->$key ;
-
-				$i++;
-			}
-		}
-
-		// insert query
-		$query = "INSERT INTO "  . $this->table . " SET " . $set;
-
-		$stmt = $this->conn->prepare($query);
-
-		// bind param 
-		foreach ($bind_param_array as $key => &$value) {
-			$stmt->bindParam($key, $value);	
-		}
-
-		if($stmt->execute()){
-			return true;
-		}
-
-		return false;
-
-	}
-
-	public function getResultSetById():object
-	{
-		
-	}
-
-	public function update($request_verb):bool
-	{
-
-	}
-
-	public function delete():bool
-	{
-
-	}
-
 
 
 	/**
@@ -120,7 +59,7 @@ class UsersModel extends MyModel implements ModelInterface
 	 *  
 	 * @return [type] array
 	 */
-	public function getUserTableFields(): array
+	public function getTableFields(): array
 	{
 		return array('id'   => array('method' => 'id', 'type' => 'INT'),
                      'name' => array('method' => 'name', 'type' => 'STRING'),
