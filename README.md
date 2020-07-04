@@ -31,7 +31,6 @@ Exapmle: /api/itemstore/v1/items/
 # URI structure
 URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}
 
-
 Example: http://127.0.0.1:8080/api/itemstore/v1/items/1
 
 
@@ -59,7 +58,8 @@ Implemented PSR-11
 
 URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}
 
-Example: http://127.0.0.1:8080/api/itemstore/v2/items/1
+1. Items URI: http://127.0.0.1:8080/api/itemstore/v2/items/1
+2. Users URI: http://127.0.0.1:8080/api/itemstore/v2/users/1
 
 
 # Features
