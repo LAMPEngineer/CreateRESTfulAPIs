@@ -1,11 +1,11 @@
 <?php
 
-interface ItemsModelInterface
+interface ModelInterface
 {
 
-	public function getAllItems(): array;
+	public function getAll(): array;
 
-	public function getItemDetailsById(): array;
+	public function getDetailsById(): array;
 
 	public function getResultSetRowCountById():int;
 
@@ -17,7 +17,7 @@ interface ItemsModelInterface
 
 	public function delete():bool;
 
-	public function getItemTableFields(): array;
+	//public function getItemTableFields(): array;
 
 	
 }

@@ -86,4 +86,86 @@ class RequestController implements RequestInterface
 		$this->parameters = $parameters;
 	}
 
+
+
+	/**
+	 * function to check and process all request
+	 * and passon to the controller
+	 * 
+	 * @param  ControllerInterface $controller object of Controller
+	 * @return array response
+	 */
+	function processRequest(ControllerInterface $controller):array
+	{
+
+		// pass requested data to the controller 
+		$controller->setData($this->parameters);
+
+		// pass requested format to the controller
+		$controller->setFormat($this->format);
+
+		// action id from request url
+		if(isset($this->url_elements[2])){
+
+			// for POST ID not needed
+			if($this->verb=='POST'){
+				return $response = array('message' => 'ERROR: Bad Request','status' => '0');
+			}
+			
+			$this->resource_id = (int)$this->url_elements[2];
+
+			// invalid resource id
+			if(($this->resource_id == 0) or empty($this->resource_id)){
+
+				$response = array('message' => 'ERROR: Bad Request','status' => '0');
+
+			} else{
+
+				// pass resource id to the controller				
+				$controller->setId($this->resource_id);
+
+				// get resource result set row count 
+				$num = $controller->getResultSetRowCount();
+		  	
+		  		if($num > 0){
+
+		  			 /*
+		  			  * call action acording to GET, PUT,
+		  			  *	 PATCH & DELETE verb
+		  			  */
+		  			$action = $this->verb.'Action';
+
+		  			$response = $controller->$action();
+		  			
+		  		} else {
+
+		  			$response = array('message' => 'ERROR: resource id not found','status' => '0');
+		  		}
+
+			}			
+		} else {
+
+			// check for POST verb
+			if($this->verb == 'POST'){
+
+				$response = $controller->postAction();
+
+				return $response;	
+			}
+
+			// check if GET request is for list resource
+			if($this->verb == 'GET'){
+
+				$response = $controller->getAllAction();
+
+				return $response;				
+			}
+
+			// response for bulk action
+			$response = array('message' => 'Bulk action curently not available!','status' => '0');
+		}
+
+		return $response;
+	}
+
 }

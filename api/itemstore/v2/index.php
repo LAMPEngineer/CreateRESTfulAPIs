@@ -17,7 +17,6 @@ include __DIR__ . '\autoload.php';
 
 $container = new ContainerController();
 
-
 // request object
 $request = $container->get('RequestController');
 
@@ -41,7 +40,7 @@ if(class_exists($controller_name)){
 	$controller = $container->get($controller_name, $model);
 	
 	// call action
-	$result = $controller->processRequest($request);
+	$result = $request->processRequest($controller);
 
 	// view format
 	$view_name = ucfirst($request->format) . 'View';

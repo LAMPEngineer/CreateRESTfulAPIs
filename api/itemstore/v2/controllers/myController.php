@@ -5,8 +5,6 @@
  * 
  */
 
-use RequestController as Request;
-
 class MyController
 {
 

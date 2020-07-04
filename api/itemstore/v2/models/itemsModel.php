@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Item model to run actions on DB
+ * Items model to run actions on DB
  */
-class ItemsModel implements ItemsModelInterface
+class ItemsModel extends MyModel implements ModelInterface
 {
 
 	/**
 	 * to hold database connection object
 	 * @var db object
 	 */
-	private $conn;
+	protected $conn;
 
 
 	/**
 	 * table name
 	 * @var string
 	 */
-	private $table;
+	protected $table;
 
 	// define table properties
 	private $id;
@@ -26,19 +26,21 @@ class ItemsModel implements ItemsModelInterface
 	private $createdAt;
 	private $updatedAt;
 
-	// getter and setter
+	// setter and getter
 	public function setId($id){ $this->id = $id; }
 	public function getId(){ return $this->id; }
+	
 	public function setName($name){ $this->name = $name; }
 	public function getName(){ return $this->name; }
+	
 	public function setDescription($description){ $this->description = $description; }
 	public function getDescription(){ return $this->description; }
+	
 	public function setCreatedAt($createdAt){ $this->created_at = $createdAt; }
 	public function getCreatedAt(){ return $this->createdAt; }
+	
 	public function setUpdatedAt($updatedAt){ $this->updatedAt = $updatedAt; }
 	public function getUpdetedAt(){ return $this->updatedAt; }
-
-
 
 
 
@@ -55,50 +57,6 @@ class ItemsModel implements ItemsModelInterface
 	}
 
 
-	/**
-	 * To get all items
-	 * 
-	 * @return [array] items array
-	 */
-	public function getAllItems(): array 
-	{
-      // prepare statement
-      $stmt = $this->conn->prepare("SELECT * FROM ". $this->table);
-      $stmt->execute();
-      $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-      return $items;
-
-	}
-
-
-	/**
-	 *  To get item by Id
-	 *  
-	 * @return [array] item array
-	 */
-	public function getItemDetailsById(): array
-	{	
-      $stmt =  $this->getResultSetById();
-      $item = $stmt->fetch(PDO::FETCH_ASSOC);
-
-      return $item;
-	}
-
-
-	/**
-	 *  To get result set row count
-	 *  
-	 * @return [integer] result set count
-	 */
-	public function getResultSetRowCountById():int 
-	{
-	  $num = 0;
-	  $result = $this->getResultSetById();
-	  $num = $result->rowCount();
-
-	  return $num;
-	}
 
 	/**
 	 * method to read collection as well as a resource

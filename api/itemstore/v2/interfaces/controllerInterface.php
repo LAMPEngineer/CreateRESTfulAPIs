@@ -1,16 +1,8 @@
 <?php
 
-interface ItemsInterface
+interface ControllerInterface
 {
 
-	/**
-	 * function to check and process all request
-	 * verbs - GET, POST, PUT, PATCH and DELETE
-	 * 
-	 * @param  Request $request      object of Request
-	 * @return array                 response
-	 */
-	function processRequest(RequestInterface $request):array;
 
 	/**
 	 * Action for GET verb to list resource 

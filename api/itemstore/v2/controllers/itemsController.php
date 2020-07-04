@@ -4,7 +4,7 @@
  *  Items controller to have actions for items
  */
 
-class ItemsController extends MyController implements ItemsInterface
+class ItemsController extends MyController implements ControllerInterface
 {
 	/**
 	 * to hold item model object
@@ -29,12 +29,17 @@ class ItemsController extends MyController implements ItemsInterface
 	/**
 	 * construct initialize db connection object
 	 */
-	public function __construct(ItemsModelInterface $items_model_interface)
+	public function __construct(ModelInterface $items_model_interface)
 	{
 		//Get item model object
 		$this->item_model = $items_model_interface;
 	}
 
+
+	// setter methods 
+	public function setData($data){ $this->data = $data; }
+	public function setFormat($format){ $this->format = $format; }
+	public function setId($item_id){ $this->item_id = $item_id; }
 
 
 
@@ -42,7 +47,7 @@ class ItemsController extends MyController implements ItemsInterface
 	 * to get row count for a resource 
 	 * @return int     row count
 	 */
-	protected function getResultSetRowCount(): int
+	public function getResultSetRowCount(): int
 	{
 		$num = 0;
 
@@ -66,7 +71,7 @@ class ItemsController extends MyController implements ItemsInterface
 	function getAllAction(): array
 	{
 	  // call read action on item model object			
-	  $data = $this->item_model->getAllItems();
+	  $data = $this->item_model->getAll();
 
 	  $response = array('message' => 'list resource ','status' => '1', 'data' => $data);
 
@@ -84,7 +89,7 @@ class ItemsController extends MyController implements ItemsInterface
 	 */
 	function getAction(): array
 	{
-		$data = $this->item_model->getItemDetailsById();
+		$data = $this->item_model->getDetailsById();
 
 		$response = array('message' => 'info of individual resource ','status' => '1', 'data' => $data);
 
@@ -144,7 +149,7 @@ class ItemsController extends MyController implements ItemsInterface
 	function putAction(): array
 	{
 
-		$data_old = $this->item_model->getItemDetailsById();
+		$data_old = $this->item_model->getDetailsById();
 
 		foreach ($data_old as $key => $value) {
 
@@ -164,11 +169,8 @@ class ItemsController extends MyController implements ItemsInterface
 		$this->item_model->setId($this->item_id);
 
 
-		/**
-		 * call update action on item model object
-		 * @param string $request_verb [put]
-		 */		 	
-		$result = $this->item_model->update($this->request_verb);
+		//call update action on item model object
+		$result = $this->item_model->update('put');
 
 		$response = ($result) ? array('message' => 'resource updated','status' => '1') : array('message' => 'resource not updated','status' => '0');
 
@@ -206,7 +208,7 @@ class ItemsController extends MyController implements ItemsInterface
 		}
  			
 		// call update action on item model object		
-		$result = $this->item_model->update($this->request_verb);
+		$result = $this->item_model->update('patch');
 
 		$response = ($result) ? array('message' => 'PATCHES - resource updated','status' => '1') : array('message' => 'PATCHES - resource not updated','status' => '0');
 
@@ -254,92 +256,5 @@ class ItemsController extends MyController implements ItemsInterface
 		return true;
 
     }
-
-	/**
-	 * function to check and process all request
-	 * verbs - GET, POST, PUT, PATCH and DELETE
-	 * 
-	 * @param  Request $request      object of Request
-	 * @return array                 response
-	 */
-	function processRequest(RequestInterface $request):array
-	{
-		// requested verb
-		$this->request_verb = strtolower($request->verb);
-
-		// requested controller
-		$this->controller = $request->url_elements[1];
-
-		// requested data
-		$this->data = $request->parameters;
-
-		// requested format
-		$this->format = $request->format;
-
-		// action id from request url
-		if(isset($request->url_elements[2])){
-
-			// for POST ID not needed
-			if($this->request_verb=='post'){
-				return $response = array('message' => 'ERROR: Bad Request','status' => '0');
-			}
-			
-			$this->resource_id = (int)$request->url_elements[2];
-
-			// invalid resource id
-			if(($this->resource_id == 0) or empty($this->resource_id)){
-
-				$response = array('message' => 'ERROR: Bad Request','status' => '0');
-
-			} else{
-
-				// create resource id variable and pass action id
-				$resource_id_str = substr($this->controller, 0, -1).'_id';
-				$this->$resource_id_str = $this->resource_id;
-
-				// get resource result set row count 
-				$num = $this->getResultSetRowCount();
-		  	
-		  		if($num > 0){
-
-		  			 /*
-		  			  * call action acording to GET, PUT,
-		  			  *	 PATCH & DELETE verb
-		  			  */
-		  			$action = $this->request_verb.'Action';
-
-		  			$response = $this->$action();
-		  			
-		  		} else {
-
-		  			$response = array('message' => 'ERROR: resource id not found','status' => '0');
-		  		}
-
-			}			
-		} else {
-
-			// check for POST verb
-			if($this->request_verb == 'post'){
-
-				$response = $this->postAction();
-
-				return $response;	
-			}
-
-			// check if GET request is for list resource
-			if($this->request_verb == 'get'){
-
-				$response = $this->getAllAction();
-
-				return $response;				
-			}
-
-			// response for bulk action
-			$response = array('message' => 'Bulk action curently not available!','status' => '0');
-		}
-
-		return $response;
-	}
-
 
 }
