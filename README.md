@@ -67,8 +67,9 @@ Example: http://127.0.0.1:8080/api/itemstore/v2/items/1
 - [x] MVC Architecture
 - [x] Program to interfaces
 - [x] Object container - PSR-11
-- [X] CORS Compatible 
+- [X] CORS Compatible
+- [X] S.O.L.I.D. Disign
 - [ ] JWT Authentication
 - [ ] Shorting & Filtering
 - [ ] Pagination
-- [ ] S.O.L.I.D. Disign
+
