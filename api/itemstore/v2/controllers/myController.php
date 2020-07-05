@@ -242,6 +242,12 @@ class MyController
 	 */
     protected function setSetterMethodWithValue($setter_key, $setter_value): bool
     {
+    	
+    	if($setter_key == 'email'){
+
+    		$setter_value = $this->checkForEmailId($setter_value);
+    	}
+
     	$table_fields = $this->model->getTableFields();
 
     	$setter_method = 'set'.ucfirst($table_fields[$setter_key]['method']);

@@ -34,7 +34,10 @@ class UsersModel extends MyModel implements ModelInterface
 	public function setEmail($email){ $this->email = $email; }
 	public function getEmail(){ return $this->email; }
 	
-	public function setPassword($password){ $this->password = $password; }
+	public function setPassword($password){ 
+		$this->password = $this->passwordHash($password);	   
+	 }
+
 	public function getPassword(){ return $this->password; }
 
 
@@ -67,5 +70,46 @@ class UsersModel extends MyModel implements ModelInterface
                      'password' => array('method' => 'password', 'type' => 'STRING')
 	                );
 	}
+
+
+	/**
+	 * function to check if email is exists in the DB
+	 * 
+	 * @param  [string] $email
+	 * @return [int]      
+	 */
+	public function checkEmail(string $email):int
+	{
+		$num = 0;
+		// select query 
+		$query = "SELECT * FROM ". $this->table
+						." WHERE email = :email";
+
+	    // prepare statement
+	    $stmt = $this->conn->prepare($query);
+
+	    // bind param
+	    $stmt->bindParam(':email', $email);
+
+		$stmt->execute();
+
+		$num = $stmt->rowCount();
+
+		return $num;			
+
+	}
+
+
+	/**
+	 * function to hash the passward
+	 *
+	 * @param [string] $password 
+	 * @return [string] hashed passward
+	 */
+	protected function passwordHash(string $passward):string
+	{
+		return password_hash($passward, PASSWORD_DEFAULT);
+	}
+
 
 }
