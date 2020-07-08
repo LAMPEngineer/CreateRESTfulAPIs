@@ -17,7 +17,7 @@ interface ContainerInterface
      *
      * @return mixed Entry.
      */
-	public function get($id, $dependent_object=null);
+	public static function get($id, $dependent_object=null);
 
 
     /**
@@ -29,5 +29,5 @@ interface ContainerInterface
      *
      * @return bool
      */
-	public function has($id): bool;
+	public static function has($id): bool;
 }

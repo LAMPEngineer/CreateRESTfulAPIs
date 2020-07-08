@@ -6,6 +6,8 @@
  *  
  */
 
+use ContainerController as Container;
+
 // check PATH_INFO
 if(!isset($_SERVER['PATH_INFO'])){
 	// redirect to root
@@ -15,10 +17,10 @@ if(!isset($_SERVER['PATH_INFO'])){
 //autoload 
 include __DIR__ . '\autoload.php';
 
-$container = new ContainerController();
+
 
 // request object
-$request = $container->get('RequestController');
+$request = Container::get('RequestController');
 
 // route the request to the right place
 $action_name = ucfirst($request->url_elements[1]) ;
@@ -28,16 +30,16 @@ $controller_name = $action_name . 'Controller';
 if(class_exists($controller_name)){
 	
 	// PDO db object
-	$db = $container->get('DatabaseConfig');
+	$db = Container::get('DatabaseConfig');
 	$conn = $db->connect();
 
 	// model object
 	$model_name = $action_name . 'Model';
 
-	$model = $container->get($model_name, $conn);
+	$model = Container::get($model_name, $conn);
 
 	//$controller object 
-	$controller = $container->get($controller_name, $model);
+	$controller = Container::get($controller_name, $model);
 	
 	// call action
 	$result = $request->processRequest($controller);
@@ -47,7 +49,7 @@ if(class_exists($controller_name)){
 
 	if(class_exists($view_name)){
 
-		$view = $container->get($view_name);
+		$view = Container::get($view_name);
 		$view->render($result);		
 	}
 

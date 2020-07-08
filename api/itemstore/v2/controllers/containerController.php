@@ -18,7 +18,7 @@ class ContainerController implements ContainerInterface
 	 * @param  [object] $dependent_object optional
 	 * @return [object] $class_object     class object                
 	 */
-	public function get($class_name, $dependent_object=null)
+	public static function get($class_name, $dependent_object=null): object
 	{
 
 		$class_object = new $class_name($dependent_object);
@@ -34,7 +34,7 @@ class ContainerController implements ContainerInterface
 	 * @param  [string]  $class_name  class to check
 	 * @return boolean               
 	 */
-	public function has($class_name): bool
+	public static function has($class_name): bool
 	{
 
 		return (class_exists($class_name)) ? true : false;
