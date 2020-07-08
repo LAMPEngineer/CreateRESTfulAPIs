@@ -5,18 +5,7 @@
  */
 class UsersModel extends MyModel implements ModelInterface
 {
-	/**
-	 * to hold database connection object
-	 * @var db object
-	 */
-	protected $conn;
 
-
-	/**
-	 * table name
-	 * @var string
-	 */
-	protected $table;
 
 	// define table properties
 	protected $id;
@@ -57,7 +46,7 @@ class UsersModel extends MyModel implements ModelInterface
 
 
 	/**
-	 *  Item table fields with type and 
+	 *  User table fields with type and 
 	 *  corresponding methods for setter/getter 
 	 *  
 	 * @return [type] array

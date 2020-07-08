@@ -6,6 +6,19 @@
  */
 class MyModel
 {
+	/**
+	 * to hold database connection object
+	 * @var db object
+	 */
+	protected $conn;
+
+
+	/**
+	 * table name
+	 * @var string
+	 */
+	protected $table;
+	
 
 	/**
 	 * To get all users

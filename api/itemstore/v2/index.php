@@ -8,6 +8,7 @@
 
 use ContainerController as Container;
 
+
 // check PATH_INFO
 if(!isset($_SERVER['PATH_INFO'])){
 	// redirect to root
@@ -18,40 +19,42 @@ if(!isset($_SERVER['PATH_INFO'])){
 include __DIR__ . '\autoload.php';
 
 
-
 // request object
 $request = Container::get('RequestController');
 
-// route the request to the right place
-$action_name = ucfirst($request->url_elements[1]) ;
+$auth = '';
+$action ='';
+// check for auth request
+if($request->url_elements[1]=='auth'){
 
-$controller_name = $action_name . 'Controller';
+	$auth = 'Auth';
 
-if(class_exists($controller_name)){
-	
-	// PDO db object
-	$db = Container::get('DatabaseConfig');
-	$conn = $db->connect();
+	// for auth controller is the users
+	$action_name = 'Users';
 
-	// model object
-	$model_name = $action_name . 'Model';
+	if(!empty($request->url_elements[2])){
 
-	$model = Container::get($model_name, $conn);
+		// action is the second element
+		$action = ucfirst($request->url_elements[2]);
 
-	//$controller object 
-	$controller = Container::get($controller_name, $model);
-	
-	// call action
-	$result = $request->processRequest($controller);
+	} else {
 
-	// view format
-	$view_name = ucfirst($request->format) . 'View';
-
-	if(class_exists($view_name)){
-
-		$view = Container::get($view_name);
-		$view->render($result);		
+		$result = array('message' => 'ERROR: Bad Request','status' => '0');
+		$request->sendResponse($result);
 	}
 
+	
+}else{
+
+	// for rest, controller is the first element
+	$action_name = ucfirst($request->url_elements[1]);
 }
 
+$controller = $request->buildControllerObject($action_name); 
+
+$process_action = 'process'. $auth . $action . 'Request';
+
+// route the request to the right place
+$result = $request->$process_action($controller);
+
+$request->sendResponse($result);

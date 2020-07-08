@@ -6,19 +6,6 @@
 class ItemsModel extends MyModel implements ModelInterface
 {
 
-	/**
-	 * to hold database connection object
-	 * @var db object
-	 */
-	protected $conn;
-
-
-	/**
-	 * table name
-	 * @var string
-	 */
-	protected $table;
-
 	// define table properties
 	protected $id;
 	protected $name;

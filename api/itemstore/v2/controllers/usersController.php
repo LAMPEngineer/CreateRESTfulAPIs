@@ -35,5 +35,10 @@ class UsersController extends MyController implements ControllerInterface
 			$this->throwError('0', 'Email id already exists.');
 		}		
 	}
+
+	protected function checkLogin()
+	{
+		
+	}
 	
 }

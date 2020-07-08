@@ -1,4 +1,7 @@
 <?php
+
+use ContainerController as Container;
+
 /*
  *  Request handler to handle the RESTful requests
  */
@@ -95,7 +98,7 @@ class RequestController implements RequestInterface
 	 * @param  ControllerInterface $controller object of Controller
 	 * @return array response
 	 */
-	function processRequest(ControllerInterface $controller):array
+	public function processRequest(ControllerInterface $controller):array
 	{
 
 		// pass requested data to the controller 
@@ -165,7 +168,114 @@ class RequestController implements RequestInterface
 			$response = array('message' => 'Bulk action curently not available!','status' => '0');
 		}
 
+	
 		return $response;
 	}
+
+
+	/**
+	 * function to process auth login request
+	 * 
+	 * @param  ControllerInterface $controller 
+	 * @return array                          
+	 */
+	public function processAuthLoginRequest(ControllerInterface $controller): array
+	{
+		// pass requested data to the controller 
+		$controller->setData($this->parameters);
+
+		// pass requested format to the controller
+		$controller->setFormat($this->format);
+
+		$response = array('message' => 'Auth - login','status' => '1');	
+
+		
+		return $response;
+
+	}
+
+
+
+	/**
+	 * function to process auth token requests
+	 * 
+	 * @param  ControllerInterface $controller 
+	 * @return array                          
+	 */
+	public function processAuthTokenRequest(ControllerInterface $controller): array
+	{
+		// pass requested data to the controller 
+		$controller->setData($this->parameters);
+
+		// pass requested format to the controller
+		$controller->setFormat($this->format);
+
+		$response = array('message' => 'Auth - token','status' => '1');	
+
+		
+		return $response;
+
+	}
+
+
+
+
+	/**
+	 * function to send response in defined format
+	 * by default is json format
+	 * 
+	 * @param  array $result 
+	 * @return exit
+	 */
+	public function sendResponse(array $result)
+	{
+
+		// view format
+		$view_name = ucfirst($this->format) . 'View';
+
+		if(class_exists($view_name)){
+
+			$view = Container::get($view_name);
+
+			$view->render($result);		
+		}
+
+		exit;
+	}
+
+
+
+	/**
+	 * function to build controller object as needed
+	 * in processing of requests
+	 * 
+	 * @param  string $action_name 
+	 * @return object             
+	 */
+	public function buildControllerObject(string $action_name): object
+	{
+
+		$controller_name = $action_name . 'Controller';
+
+		if(class_exists($controller_name)){
+			
+			// PDO db object
+			$db = Container::get('DatabaseConfig');
+			$conn = $db->connect();
+
+			// model object
+			$model_name = $action_name . 'Model';
+
+			$model = Container::get($model_name, $conn);
+
+			//$controller object 
+			$controller = Container::get($controller_name, $model);
+
+			return $controller;
+		}
+
+	}
+
+
 
 }
