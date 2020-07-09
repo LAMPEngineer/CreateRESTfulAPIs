@@ -36,9 +36,57 @@ class UsersController extends MyController implements ControllerInterface
 		}		
 	}
 
-	protected function checkLogin()
+
+
+	/**
+	 * login action for POST verb 
+	 * 
+	 * @return array response with status
+	 */
+	public function postLoginAction(): array
 	{
-		
+		$data = (object)$this->data;
+
+		if(!empty($data->email) && !empty($data->password)){
+
+			if($this->model->checkEmail($data->email) != 0){
+
+			  	 // validation
+			    $setter_value = $this->validateParameter('email', $data->email, false);
+			  	
+			    // values to model
+			    $this->model->setEmail($setter_value);
+			
+				// call insert action on model object		
+				$user_data = (object)$this->model->login();
+
+				if(password_verify($data->password, $user_data->password)){			
+
+					$response = array('message' => 'Login successful', 'status' => '1');
+
+				}else{
+					$this->throwError('0', 'Invalid credentials');
+				}
+
+			}else{
+				$this->throwError('0', 'Invalid credentials');
+			}
+
+		}else{
+			$this->throwError('0', 'All data needed');
+		}
+
+		return $response;
+	}
+
+
+	public function postLogoutAction()
+	{
+		$data = $this->data;
+
+		$response = array('message' => 'Auth - Post Logout *** Action', 'status' => '1', 'data' => $data);
+
+		return $response;
 	}
 	
 }

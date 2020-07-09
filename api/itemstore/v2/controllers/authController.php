@@ -65,4 +65,11 @@ class AuthController extends MyController implements ControllerInterface
 
 	}
 
+	public function generateToken()
+	{
+		$token = 'jahGlasfitgfefmcouFsmcfUomd';
+
+		return $token;
+	}
+
 }

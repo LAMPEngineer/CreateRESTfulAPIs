@@ -99,13 +99,8 @@ class RequestController implements RequestInterface
 	 * @return array response
 	 */
 	public function processRequest(ControllerInterface $controller):array
-	{
-
-		// pass requested data to the controller 
-		$controller->setData($this->parameters);
-
-		// pass requested format to the controller
-		$controller->setFormat($this->format);
+	{		
+		$this->setControllerProperty($controller);
 
 		// action id from request url
 		if(isset($this->url_elements[2])){
@@ -133,12 +128,13 @@ class RequestController implements RequestInterface
 		  		if($num > 0){
 
 		  			 /*
-		  			  * call action acording to GET, PUT,
+		  			  * call action as of REST i.e - GET, PUT,
 		  			  *	 PATCH & DELETE verb
 		  			  */
-		  			$action = $this->verb.'Action';
 
-		  			$response = $controller->$action();
+		  			// call controller action
+					$response = $this->callControllerAction($controller);
+
 		  			
 		  		} else {
 
@@ -173,49 +169,32 @@ class RequestController implements RequestInterface
 	}
 
 
+
 	/**
-	 * function to process auth login request
+	 * function to process auth requests
 	 * 
 	 * @param  ControllerInterface $controller 
 	 * @return array                          
 	 */
-	public function processAuthLoginRequest(ControllerInterface $controller): array
+	public function processAuthRequest(ControllerInterface $controller, string $auth_action): array
 	{
-		// pass requested data to the controller 
-		$controller->setData($this->parameters);
 
-		// pass requested format to the controller
-		$controller->setFormat($this->format);
+		$this->setControllerProperty($controller);
 
-		$response = array('message' => 'Auth - login','status' => '1');	
+		// call controller action
+		$response = $this->callControllerAction($controller, $auth_action);
+		if($response['status']=='1'){
+			// auth controller object 
+			$auth = $this->buildControllerObject('Auth');
 
+			$token = $auth->generateToken();
+			$response['token'] = $token;
+		}
 		
 		return $response;
 
 	}
 
-
-
-	/**
-	 * function to process auth token requests
-	 * 
-	 * @param  ControllerInterface $controller 
-	 * @return array                          
-	 */
-	public function processAuthTokenRequest(ControllerInterface $controller): array
-	{
-		// pass requested data to the controller 
-		$controller->setData($this->parameters);
-
-		// pass requested format to the controller
-		$controller->setFormat($this->format);
-
-		$response = array('message' => 'Auth - token','status' => '1');	
-
-		
-		return $response;
-
-	}
 
 
 
@@ -276,6 +255,46 @@ class RequestController implements RequestInterface
 
 	}
 
+
+
+	/**
+	 *  call action as of REST i.e - GET, PUT,
+	 *	 PATCH & DELETE verb
+	 *
+	 * @param string $extra optional
+	 * @return array response
+	 */
+	private function callControllerAction(ControllerInterface $controller, String $extra=''): array
+	{
+
+		// only POST allowed for Auth request
+		if(!empty($extra) && ($this->verb != 'POST')){
+			return array('message' => 'ERROR: method not supported','status' => '0');
+		}
+
+		$action = strtolower($this->verb) . $extra . 'Action';
+
+		//call action
+		$response = $controller->$action();
+
+		return $response;
+	}
+
+
+	/**
+	 *  function to set controller's property
+	 *  
+	 * @param ControllerInterface $controller 
+	 */
+	private function setControllerProperty(ControllerInterface $controller):void
+	{
+		// set requested data to the controller 
+		$controller->setData($this->parameters);
+
+		// set requested format to the controller
+		$controller->setFormat($this->format);
+		
+	}
 
 
 }

@@ -18,43 +18,36 @@ if(!isset($_SERVER['PATH_INFO'])){
 //autoload 
 include __DIR__ . '\autoload.php';
 
-
 // request object
 $request = Container::get('RequestController');
 
 $auth = '';
-$action ='';
+$auth_action ='';
+
 // check for auth request
 if($request->url_elements[1]=='auth'){
-
 	$auth = 'Auth';
-
-	// for auth controller is the users
+	// for auth controller is the Users
 	$action_name = 'Users';
 
 	if(!empty($request->url_elements[2])){
-
 		// action is the second element
-		$action = ucfirst($request->url_elements[2]);
-
+		$auth_action = ucfirst($request->url_elements[2]);
 	} else {
-
 		$result = array('message' => 'ERROR: Bad Request','status' => '0');
 		$request->sendResponse($result);
 	}
-
 	
 }else{
-
 	// for rest, controller is the first element
 	$action_name = ucfirst($request->url_elements[1]);
 }
 
 $controller = $request->buildControllerObject($action_name); 
 
-$process_action = 'process'. $auth . $action . 'Request';
+$process_action = 'process'. $auth . 'Request';
 
 // route the request to the right place
-$result = $request->$process_action($controller);
+$result = $request->$process_action($controller, $auth_action);
 
 $request->sendResponse($result);

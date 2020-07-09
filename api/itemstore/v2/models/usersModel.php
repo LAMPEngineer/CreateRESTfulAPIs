@@ -88,6 +88,30 @@ class UsersModel extends MyModel implements ModelInterface
 
 	}
 
+	/**
+	 * function to check login 
+	 * 
+	 * @return array $user_data
+	 */
+	public function login():array
+	{
+		// select query 
+		$query = "SELECT * FROM ". $this->table
+						." WHERE email = :email";
+
+	    // prepare statement
+	    $stmt = $this->conn->prepare($query);
+
+	    // bind param
+	    $stmt->bindParam(':email', $this->email);
+
+		$stmt->execute();
+
+      	$user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      return $user_data;			
+
+	}
 
 	/**
 	 * function to hash the passward
