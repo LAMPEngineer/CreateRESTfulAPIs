@@ -62,6 +62,13 @@ URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resour
 
 
 
+# Policy
+
+![development_policy.jpg](./img/development_policy.jpg)
+
+
+
+
 # V1 [version 1]
 
 
