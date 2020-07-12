@@ -23,26 +23,6 @@ App is built on core PHP 7.2.5 and MySQL 5.6
  * A trailing forward slash (/) should not be included in URIs
 
 Exapmle: /api/itemstore/v1/items/       
-         
-
-# V1 [version 1]
-
-
-# URI structure
-URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}
-
-Example: http://127.0.0.1:8080/api/itemstore/v1/items/1
-
-
-# Architecture
-
-Used MVC architecture
-
-![architecture_create_rest_api.jpg](./img/architecture_create_rest_api.jpg)
-
-
-
-
 
 # V2 [version 2]
 
@@ -58,8 +38,10 @@ Implemented PSR-11
 
 URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}
 
-1. Items URI: http://127.0.0.1:8080/api/itemstore/v2/items/1
-2. Users URI: http://127.0.0.1:8080/api/itemstore/v2/users/1
+1. Login URI: http://127.0.0.1:8080/api/itemstore/v2/auth/login
+2. Logout URI: http://127.0.0.1:8080/api/itemstore/v2/auth/logout
+3. Items URI: http://127.0.0.1:8080/api/itemstore/v2/items/1
+4. Users URI: http://127.0.0.1:8080/api/itemstore/v2/users/1
 
 
 # Features
@@ -72,4 +54,33 @@ URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resour
 - [ ] JWT Authentication
 - [ ] Shorting & Filtering
 - [ ] Pagination
+
+
+# Architecture (V2)
+
+![auth_flow.jpg](./img/auth_flow.jpg)
+
+
+
+# V1 [version 1]
+
+
+# URI structure
+URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}
+
+Example: http://127.0.0.1:8080/api/itemstore/v1/items/1
+
+
+
+# Architecture (V1)
+
+Used MVC architecture
+
+![architecture_create_rest_api.jpg](./img/architecture_create_rest_api.jpg)
+
+
+
+
+
+
 
