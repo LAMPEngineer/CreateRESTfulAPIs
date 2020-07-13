@@ -1,9 +1,13 @@
 <?php
 
+use ContainerController as Container;
+use \Firebase\JWT\JWT;
+
+
  /*
   *  Auth controller to have actions for items
   */
-class AuthController extends MyController implements ControllerInterface
+class AuthController extends MyController implements ControllerInterface, AuthInterface
 {
 
 	/**
@@ -67,9 +71,57 @@ class AuthController extends MyController implements ControllerInterface
 
 	public function generateToken()
 	{
-		$token = 'jahGlasfitgfefmcouFsmcfUomd';
+		$payload_info = '1234';
+		$secret_key = '567';
+		$token =  JWT::encode($payload_info, $secret_key, 'HS512');
 
 		return $token;
+	}
+
+
+	public function postLoginAction(): array
+	{
+
+		$users_controller = $this->buildObject('Users');
+
+		// set requested data to the controller 
+		$users_controller->setData($this->data);
+
+		// set requested format to the controller
+		$users_controller->setFormat($this->format);
+
+		$response = $users_controller->loginAction();
+
+		if($response['status']=='1'){
+			$token = $this->generateToken();
+			$response['token'] = $token;
+		}
+
+		return $response;
+	}
+
+	private function buildObject(string $action_name): object
+	{
+
+		$controller_name = $action_name . 'Controller';
+
+		if(class_exists($controller_name)){
+			
+			// PDO db object
+			$db = Container::get('DatabaseConfig');
+			$conn = $db->connect();
+
+			// model object
+			$model_name = $action_name . 'Model';
+
+			$model = Container::get($model_name, $conn);
+
+			//$controller object 
+			$controller = Container::get($controller_name, $model);
+
+			return $controller;
+		}
+
 	}
 
 }

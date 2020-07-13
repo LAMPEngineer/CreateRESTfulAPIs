@@ -174,6 +174,7 @@ class RequestController implements RequestInterface
 	 * function to process auth requests
 	 * 
 	 * @param  ControllerInterface $controller 
+	 * @param  string $auth_action 
 	 * @return array                          
 	 */
 	public function processAuthRequest(ControllerInterface $controller, string $auth_action): array
@@ -183,14 +184,7 @@ class RequestController implements RequestInterface
 
 		// call controller action
 		$response = $this->callControllerAction($controller, $auth_action);
-		if($response['status']=='1'){
-			// auth controller object 
-			$auth = $this->buildControllerObject('Auth');
-
-			$token = $auth->generateToken();
-			$response['token'] = $token;
-		}
-		
+	
 		return $response;
 
 	}

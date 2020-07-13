@@ -43,7 +43,7 @@ class UsersController extends MyController implements ControllerInterface
 	 * 
 	 * @return array response with status
 	 */
-	public function postLoginAction(): array
+	public function loginAction(): array
 	{
 		$data = (object)$this->data;
 
@@ -62,7 +62,9 @@ class UsersController extends MyController implements ControllerInterface
 
 				if(password_verify($data->password, $user_data->password)){			
 
-					$response = array('message' => 'Login successful', 'status' => '1');
+					$user_data_arr = array('id' => $user_data->id, 'name' => $user_data->name, 'email' => $user_data->email);
+					
+					$response = array('message' => 'Login successful', 'status' => '1', 'user_data' => $user_data_arr);
 
 				}else{
 					$this->throwError('0', 'Invalid credentials');
@@ -80,7 +82,7 @@ class UsersController extends MyController implements ControllerInterface
 	}
 
 
-	public function postLogoutAction()
+	public function logoutAction()
 	{
 		$data = $this->data;
 

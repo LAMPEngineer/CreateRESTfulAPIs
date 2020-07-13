@@ -17,6 +17,7 @@ if(!isset($_SERVER['PATH_INFO'])){
 
 //autoload 
 include __DIR__ . '\autoload.php';
+require '../vendor/autoload.php';
 
 // request object
 $request = Container::get('RequestController');
@@ -26,10 +27,8 @@ $auth_action ='';
 
 // check for auth request
 if($request->url_elements[1]=='auth'){
-	$auth = 'Auth';
-	// for auth controller is the Users
-	$action_name = 'Users';
-
+	$action_name = $auth = 'Auth';
+	
 	if(!empty($request->url_elements[2])){
 		// action is the second element
 		$auth_action = ucfirst($request->url_elements[2]);
