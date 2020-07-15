@@ -8,9 +8,8 @@
 
 interface AuthInterface
 {
-	
-	public function generateToken();
-
 	public function postLoginAction(): array;
+	
+	public function generateToken(array $user_data): string;
 
 }

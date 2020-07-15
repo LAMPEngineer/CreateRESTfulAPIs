@@ -30,7 +30,7 @@ if($request->url_elements[1]=='auth'){
 	$action_name = $auth = 'Auth';
 	
 	if(!empty($request->url_elements[2])){
-		// action is the second element
+		// second element is the action 
 		$auth_action = ucfirst($request->url_elements[2]);
 	} else {
 		$result = array('message' => 'ERROR: Bad Request','status' => '0');
@@ -38,7 +38,7 @@ if($request->url_elements[1]=='auth'){
 	}
 	
 }else{
-	// for rest, controller is the first element
+	// without auth, first element is action i.e the controller 
 	$action_name = ucfirst($request->url_elements[1]);
 }
 

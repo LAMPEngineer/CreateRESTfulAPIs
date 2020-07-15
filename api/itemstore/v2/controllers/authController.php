@@ -69,16 +69,14 @@ class AuthController extends MyController implements ControllerInterface, AuthIn
 
 	}
 
-	public function generateToken()
-	{
-		$payload_info = '1234';
-		$secret_key = '567';
-		$token =  JWT::encode($payload_info, $secret_key, 'HS512');
-
-		return $token;
-	}
 
 
+	/**
+	 * Login action for POST verb. It generates 
+	 * JWT token with user data.
+	 * 
+	 * @return array  generated token in 'jwt' key
+	 */
 	public function postLoginAction(): array
 	{
 
@@ -92,14 +90,87 @@ class AuthController extends MyController implements ControllerInterface, AuthIn
 
 		$response = $users_controller->loginAction();
 
-		if($response['status']=='1'){
-			$token = $this->generateToken();
-			$response['token'] = $token;
-		}
+	    $user_data = $response['user_data'];
+
+  		unset($response['user_data']); // unset user data from responce
+
+  		// generate token
+		$token = $this->generateToken($user_data);
+
+		$response['jwt'] = $token;		
 
 		return $response;
 	}
 
+
+
+	public function postReadAction(): array
+	{
+
+		$data = (object)$this->data;
+
+		if(!empty($data->jwt)){
+
+			$response = array('message' => 'got jwt token','status' => '1');
+
+		}else{
+
+			$response = array('message' => 'ERROR: can not read jwt token','status' => '0');
+		}
+
+		return $response;
+
+	}
+
+
+	/**
+	 * Generates token with user data using Firebase JWT
+	 * encode method
+	 * 
+	 * 
+	 * @param  array $user_data  user data to generate JWT 
+	 * @return string $token generated token           
+	 */
+	public function generateToken(array $user_data): string
+	{
+
+		$iss = "localhost";
+		$iat = time();
+		$nbf = $iat + 10;
+		$exp = $iat + 60;
+		$aud = "myusers";
+
+		$payload_info = array(
+				"iss"  =>$iss,
+				"iat"  =>$iat,
+				"nbf"  =>$nbf,
+				"exp"  =>$exp,
+				"aud"  =>$aud,
+				"data" => $user_data
+			);
+
+		$secret_key = "letmein12345";
+
+
+		$token =  JWT::encode($payload_info, $secret_key, 'HS512');
+
+		return $token;
+	}
+
+
+
+
+	public function readToken()
+	{
+
+	}
+
+	/**
+	 * method to build controller object
+	 * 
+	 * @param  string $action_name      the controller
+	 * @return object              		controller object
+	 */
 	private function buildObject(string $action_name): object
 	{
 

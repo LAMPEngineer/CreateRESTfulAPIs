@@ -22,9 +22,9 @@ class UsersController extends MyController implements ControllerInterface
 	 * sends back the email else theow error
 	 * 
 	 * @param  string $email 
-	 * @return [mixed]  
+	 * @return string email  
 	 */
-	protected function checkForEmailId(string $email)
+	protected function checkForEmailId(string $email): string
 	{
 		if(($this->model->checkEmail($email)) == 0)
 		{			
@@ -39,9 +39,10 @@ class UsersController extends MyController implements ControllerInterface
 
 
 	/**
-	 * login action for POST verb 
+	 * Login action for POST verb. It checks for 
+	 * all use-cases and return responces accordingly
 	 * 
-	 * @return array response with status
+	 * @return array response with user data  
 	 */
 	public function loginAction(): array
 	{
