@@ -218,38 +218,6 @@ class RequestController implements RequestInterface
 
 
 
-	/**
-	 * function to build controller object as needed
-	 * in processing of requests
-	 * 
-	 * @param  string $action_name 
-	 * @return object             
-	 */
-	public function buildControllerObject(string $action_name): object
-	{
-
-		$controller_name = $action_name . 'Controller';
-
-		if(class_exists($controller_name)){
-			
-			// PDO db object
-			$db = Container::get('DatabaseConfig');
-			$conn = $db->connect();
-
-			// model object
-			$model_name = $action_name . 'Model';
-
-			$model = Container::get($model_name, $conn);
-
-			//$controller object 
-			$controller = Container::get($controller_name, $model);
-
-			return $controller;
-		}
-
-	}
-
-
 
 	/**
 	 *  call action as of REST i.e - GET, PUT,

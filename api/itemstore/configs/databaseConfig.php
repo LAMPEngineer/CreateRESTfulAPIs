@@ -1,16 +1,21 @@
 <?php
+
+//use appConfig;
+
 /*
  *  DB connection with PDO
  */
 class DatabaseConfig 
 {
-	//DB params
-	private $host = 'localhost';
-	private $db_name = 'rest_api_app';
-	private $username = 'root';
-	private $password = '';
+
+	//private $configs;
 	private $conn;
 
+/*	public function __construct($configs)
+	{
+		$this->configs = $configs;
+	}
+*/
 	//DB connect
 	public function connect()
 	{
@@ -18,7 +23,8 @@ class DatabaseConfig
 
 		try{
 			//PDO object
-			$this->conn = new PDO('mysql:host=' . $this->host . ';dbname=' . $this->db_name, $this->username, $this->password);
+			$this->conn = new PDO('mysql:host=' . env('DB_HOST') . ';dbname=' . env('DB_NAME'),env('DB_USERNAME'), env('DB_PASSWORD'));
+
 			$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		} catch(PDOException $e) {

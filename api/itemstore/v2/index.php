@@ -6,6 +6,7 @@
  *  
  */
 
+use MyTraitController as MyTrait;
 use ContainerController as Container;
 
 
@@ -16,8 +17,9 @@ if(!isset($_SERVER['PATH_INFO'])){
 }
 
 //autoload 
-include __DIR__ . '\autoload.php';
-require '../vendor/autoload.php';
+include __DIR__ . '/autoload.php';
+include  '../vendor/autoload.php';
+
 
 // request object
 $request = Container::get('RequestController');
@@ -42,7 +44,8 @@ if($request->url_elements[1]=='auth'){
 	$action_name = ucfirst($request->url_elements[1]);
 }
 
-$controller = $request->buildControllerObject($action_name); 
+// create object
+$controller = MyTrait::buildObject($action_name);
 
 $process_action = 'process'. $auth . 'Request';
 
