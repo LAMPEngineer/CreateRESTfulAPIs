@@ -6,6 +6,10 @@
  *  
  */
 
+//autoload 
+include __DIR__ . '/autoload.php';
+include  '../vendor/autoload.php';
+
 use MyTraitController as MyTrait;
 use ContainerController as Container;
 
@@ -16,11 +20,10 @@ if(!isset($_SERVER['PATH_INFO'])){
 	header("Location: ../../../");
 }
 
-//autoload 
-include __DIR__ . '/autoload.php';
-include  '../vendor/autoload.php';
-
-
+/*var_dump($config);
+echo "DB = ".$config['database']['dbname'];
+die;
+*/
 // request object
 $request = Container::get('RequestController');
 

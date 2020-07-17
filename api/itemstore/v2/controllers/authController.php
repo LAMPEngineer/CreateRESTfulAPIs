@@ -134,11 +134,11 @@ class AuthController extends MyController implements ControllerInterface, AuthIn
 	public function generateToken(array $user_data): string
 	{
 
-		$iss = "localhost";
+		$iss = env('JWT_ISS');
 		$iat = time();
 		$nbf = $iat + 10;
 		$exp = $iat + 60;
-		$aud = "myusers";
+		$aud = env('JWT_AUD');
 
 		$payload_info = array(
 				"iss"  =>$iss,
@@ -149,10 +149,10 @@ class AuthController extends MyController implements ControllerInterface, AuthIn
 				"data" => $user_data
 			);
 
-		$secret_key = "letmein12345";
+		$secret_key = env('JWT_SECRET');
+		$algo = env('JWT_ALGO');
 
-
-		$token =  JWT::encode($payload_info, $secret_key, 'HS512');
+		$token =  JWT::encode($payload_info, $secret_key, $algo);
 
 		return $token;
 	}

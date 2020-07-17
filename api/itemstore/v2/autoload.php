@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * autoload rules to load controller, model, view 
  * and config files as needed
@@ -26,9 +24,10 @@ function apiAutoload($classname)
 }
 
 
+
 //set env variable
-if(file_exists('./env.php')){
-	include './env.php';
+if(file_exists('./../configs/env.php')){
+	include './../configs/env.php';
 }
 
 if(!function_exists('env')){
@@ -41,4 +40,11 @@ if(!function_exists('env')){
 
 		return $value;
 	}
+}
+
+
+
+//include config 
+if(file_exists('./../configs/config.php')){
+	$config = include './../configs/config.php';
 }
