@@ -104,65 +104,103 @@ class AuthController extends MyController implements ControllerInterface, AuthIn
 
 
 
+	/**
+	 * Read action for POST verb. To get jwt token, this method checks :
+	 *  i.  post data and
+	 *  ii. headers -> 'Authorization'
+	 * 
+	 * @return array 	keys - 'status', 'message' and 'user_data'
+	 */
 	public function postReadAction(): array
 	{
 
-		$data = (object)$this->data;
+		$data = (object)$this->data;  // to check post data
+		$all_headers = getallheaders(); // to check headers
+
 
 		if(!empty($data->jwt)){
 
-			$response = array('message' => 'got jwt token','status' => '1');
+			$response = $this->readToken($data->jwt);
+			$response['message'] .= ' from post data'; 
 
-		}else{
+		} elseif(!empty($all_headers['Authorization'])) {
 
-			$response = array('message' => 'ERROR: can not read jwt token','status' => '0');
+				$jwt_token = $all_headers['Authorization'];
+				$response = $this->readToken($jwt_token);
+				$response['message'] .= ' from headers'; 			
+
+		} else {
+
+			$response = array('message' => "ERROR: cann't read jwt token",'status' => '0');
 		}
 
 		return $response;
-
 	}
+
 
 
 	/**
 	 * Generates token with user data using Firebase JWT
-	 * encode method
+	 * encode method. It gets JWT constants from config.
 	 * 
 	 * 
-	 * @param  array $user_data  user data to generate JWT 
-	 * @return string $token generated token           
+	 * @param  array $user_data		    user data to generate JWT 
+	 * @return string $token 	        generated token           
 	 */
 	public function generateToken(array $user_data): string
 	{
 
 		$iss = env('JWT_ISS');
-		$iat = time();
-		$nbf = $iat + 10;
-		$exp = $iat + 60;
+		$iat = env('JWT_IAT');
+		$nbf = $iat + env('JWT_NBF');
+		$exp = $iat + env('JWT_EXP');
 		$aud = env('JWT_AUD');
 
 		$payload_info = array(
-				"iss"  =>$iss,
-				"iat"  =>$iat,
-				"nbf"  =>$nbf,
-				"exp"  =>$exp,
-				"aud"  =>$aud,
+				"iss"  => $iss,
+				"iat"  => $iat,
+				"nbf"  => $nbf,
+				"exp"  => $exp,
+				"aud"  => $aud,
 				"data" => $user_data
 			);
 
 		$secret_key = env('JWT_SECRET');
 		$algo = env('JWT_ALGO');
 
-		$token =  JWT::encode($payload_info, $secret_key, $algo);
+		$token =  JWT::encode($payload_info, $secret_key, $algo); // JWT encode method
 
 		return $token;
 	}
 
 
 
-
-	public function readToken()
+	/**
+	 * Methot to read JWT token. It reads config to get JWT constants.
+	 * 
+	 * @param  array $jwt_token	JWT token  
+	 * @return array            keys - 'status', 'message' and 'user_data'
+	 */
+	public function readToken($jwt_token): array
 	{
 
+		try{
+			$secret_key = env('JWT_SECRET');
+			$algo = env('JWT_ALGO');
+			
+			//JWT decode method
+			$decoded_data = JWT::decode($jwt_token, $secret_key, array($algo));
+			$data = $decoded_data->data; // user data
+			
+			$response = array('message' => 'Read jwt token successfully','status' => '1', 'user_data' => $data);
+
+		}catch(Exception $ex){
+			$this->throwError('0', $ex->getMessage());
+		}
+
+		return $response;
+
 	}
+
 
 }
