@@ -1,4 +1,5 @@
 <?php
+use MyTraitController as MyTrait;
 /*
  *  Items controller to have actions for items
  */
@@ -32,7 +33,7 @@ class UsersController extends MyController implements ControllerInterface
 
 		} else {
 
-			$this->throwError('0', 'Email id already exists.');
+			MyTrait::throwError('0', 'Email id already exists.');
 		}		
 	}
 
@@ -68,15 +69,15 @@ class UsersController extends MyController implements ControllerInterface
 					$response = array('message' => 'Login successful', 'status' => '1', 'user_data' => $user_data_arr);
 
 				}else{
-					$this->throwError('0', 'Invalid credentials');
+					MyTrait::throwError('0', 'Invalid credentials');
 				}
 
 			}else{
-				$this->throwError('0', 'Invalid credentials');
+				MyTrait::throwError('0', 'Invalid credentials');
 			}
 
 		}else{
-			$this->throwError('0', 'All data needed');
+			MyTrait::throwError('0', 'All data needed');
 		}
 
 		return $response;

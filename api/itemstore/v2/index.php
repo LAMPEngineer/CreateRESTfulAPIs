@@ -20,10 +20,7 @@ if(!isset($_SERVER['PATH_INFO'])){
 	header("Location: ../../../");
 }
 
-/*var_dump($config);
-echo "DB = ".$config['database']['dbname'];
-die;
-*/
+
 // request object
 $request = Container::get('RequestController');
 
@@ -43,6 +40,18 @@ if($request->url_elements[1]=='auth'){
 	}
 	
 }else{
+
+	// check headers for authorization token
+	$all_headers = getallheaders(); 
+
+/*	var_dump($all_headers);
+	die;*/
+	if(empty($all_headers['Authorization'])) {
+		$result = array('message' => 'ERROR: authorization token missing','status' => '0');
+		$request->sendResponse($result);
+	}
+
+
 	// without auth, first element is action i.e the controller 
 	$action_name = ucfirst($request->url_elements[1]);
 }

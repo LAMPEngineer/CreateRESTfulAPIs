@@ -10,6 +10,6 @@ interface AuthInterface
 {
 	public function postLoginAction(): array;
 	
-	public function generateToken(array $user_data): string;
+	public function postReadAction(): array;
 
 }
