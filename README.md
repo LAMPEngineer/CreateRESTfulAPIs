@@ -51,6 +51,7 @@ URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resour
 - [x] Object container - PSR-11
 - [X] CORS Compatible
 - [X] S.O.L.I.D. Disign
+- [X] Traits
 - [X] JWT Authentication
 - [ ] Shorting & Filtering
 - [ ] Pagination
