@@ -57,7 +57,7 @@ URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resour
 - [ ] Pagination
 
 
-# Architecture (V2)
+# Architecture
 
 ![auth_flow.jpg](./img/auth_flow.jpg)
 
