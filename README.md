@@ -66,29 +66,3 @@ URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resour
 # Policy
 
 ![development_policy.jpg](./img/development_policy.jpg)
-
-
-
-
-# V1 [version 1]
-
-
-# URI structure
-URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}
-
-Example: http://127.0.0.1:8080/api/itemstore/v1/items/1
-
-
-
-# Architecture (V1)
-
-Used MVC architecture
-
-![architecture_create_rest_api.jpg](./img/architecture_create_rest_api.jpg)
-
-
-
-
-
-
-
