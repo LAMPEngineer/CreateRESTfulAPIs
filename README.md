@@ -40,8 +40,9 @@ URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resour
 
 1. Login URI: http://127.0.0.1:8080/api/itemstore/v2/auth/login
 2. Logout URI: http://127.0.0.1:8080/api/itemstore/v2/auth/logout
-3. Items URI: http://127.0.0.1:8080/api/itemstore/v2/items/1
-4. Users URI: http://127.0.0.1:8080/api/itemstore/v2/users/1
+
+3. Items URI: http://127.0.0.1:8080/api/itemstore/v2/items/1 (requires JWT token on header)
+4. Users URI: http://127.0.0.1:8080/api/itemstore/v2/users/1 (requires JWT token on header)
 
 
 # Features
