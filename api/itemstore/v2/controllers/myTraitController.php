@@ -37,6 +37,28 @@ trait MyTraitController
 
 	}
 
+	public function readTokenFromHeadersOrPostData(): array
+	{		  
+		$request = Container::get('requestController');
+		$data = (object)$request->parameters; // to check post data
+
+		$response = (!empty($data->jwt))? self::readJWTTokenGetUserData($data->jwt) : self::readHeaderGetUserDataFromJWT();
+		
+		return $response;
+	}
+
+	/**
+	 *  private method to read JWT token and get user data
+	 *  
+	 * @param  string $data_jwt 	JWT token
+	 * @return array    keys - 'status', 'message' and 'user_data'      		
+	 */
+	private function readJWTTokenGetUserData($data_jwt): array
+	{
+		$response = self::readToken($data_jwt);
+		$response['message'] .= ' from post data';
+		return $response;
+	}
 
 	/**
 	 * Method to read headers and get user data from JWT.

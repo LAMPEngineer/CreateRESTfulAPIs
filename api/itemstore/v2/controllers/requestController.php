@@ -20,7 +20,7 @@ class RequestController implements RequestInterface
 	public $verb;
 
 	/**
-	 * request parameters
+	 * request parameters aka data
 	 * @var array
 	 */
 	public $parameters;

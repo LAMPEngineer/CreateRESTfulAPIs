@@ -35,20 +35,19 @@ if($request->url_elements[1]=='auth'){
 		// second element is the action 
 		$auth_action = ucfirst($request->url_elements[2]);
 	} else {
-		$result = array('message' => 'ERROR: Bad Request','status' => '0');
-		$request->sendResponse($result);
+		MyTrait::throwError('0', 'ERROR: Bad Request');
 	}
 	
 }else{
-
 	// check headers for authorization token
 	$all_headers = getallheaders(); 
-
-/*	var_dump($all_headers);
-	die;*/
-	if(empty($all_headers['Authorization'])) {
-		$result = array('message' => 'ERROR: authorization token missing','status' => '0');
-		$request->sendResponse($result);
+	if(!empty($all_headers['Authorization'])) {
+		//MyTrait::read token...
+		$response = (object)MyTrait::readTokenFromHeadersOrPostData();
+		if($response->status!='1')MyTrait::throwError('0', 'ERROR: Not authorize');
+		
+	 	} else {
+		MyTrait::throwError('0', 'ERROR: authorization token missing');
 	}
 
 

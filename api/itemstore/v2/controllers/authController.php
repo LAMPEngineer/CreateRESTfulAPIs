@@ -112,10 +112,8 @@ class AuthController extends MyController implements ControllerInterface, AuthIn
 	 */
 	public function postReadAction(): array
 	{
-
-		$data = (object)$this->data;  // to check post data
-		
-		$response = (!empty($data->jwt))? $this->readJWTTokenGetUserData($data->jwt) : MyTrait::readHeaderGetUserDataFromJWT();
+	
+		$response = MyTrait::readTokenFromHeadersOrPostData();
 		
 		return $response;
 	}
@@ -127,11 +125,11 @@ class AuthController extends MyController implements ControllerInterface, AuthIn
 	 * @param  string $data_jwt 	JWT token
 	 * @return array    keys - 'status', 'message' and 'user_data'      		
 	 */
-	private function readJWTTokenGetUserData($data_jwt): array
+/*	private function readJWTTokenGetUserData($data_jwt): array
 	{
 		$response = MyTrait::readToken($data_jwt);
 		$response['message'] .= ' from post data';
 		return $response;
-	}
+	}*/
 
 }
