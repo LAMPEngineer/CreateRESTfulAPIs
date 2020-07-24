@@ -7,7 +7,8 @@ use MyTraitController as MyTrait;
 class UsersController extends MyController implements ControllerInterface
 {
 
-
+	protected $controller;
+	
 	/**
 	 * construct initialize db connection object
 	 */
@@ -15,6 +16,8 @@ class UsersController extends MyController implements ControllerInterface
 	{
 		//Get item model object
 		$this->model = $users_model_interface;
+
+		$this->controller = 'users';
 	}
 
 

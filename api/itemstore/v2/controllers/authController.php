@@ -119,17 +119,4 @@ class AuthController extends MyController implements ControllerInterface, AuthIn
 	}
 
 
-	/**
-	 *  private method to read JWT token and get user data
-	 *  
-	 * @param  string $data_jwt 	JWT token
-	 * @return array    keys - 'status', 'message' and 'user_data'      		
-	 */
-/*	private function readJWTTokenGetUserData($data_jwt): array
-	{
-		$response = MyTrait::readToken($data_jwt);
-		$response['message'] .= ' from post data';
-		return $response;
-	}*/
-
 }

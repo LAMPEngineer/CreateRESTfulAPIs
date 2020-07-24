@@ -126,6 +126,9 @@ class MyController
 
 		}
 
+		// to set created by filed as read from jwt token
+		if($this->controller === 'items')$this->callSetter('setCreatedBy');
+
 		// call insert action on model object		
 		$result = $this->model->insert();
 
@@ -164,6 +167,8 @@ class MyController
 
 		$this->model->setId($this->id);
 
+		// to set updeted by filed as read from jwt token
+		if($this->controller === 'items')$this->callSetter('setUpdatedBy');
 
 		//call update action on model object
 		$result = $this->model->update('put');
@@ -202,7 +207,10 @@ class MyController
 		  } 
 
 		}
- 			
+ 		
+ 		// to set updeted by filed as read from jwt token
+ 		if($this->controller === 'items')$this->callSetter('setUpdatedBy');
+
 		// call update action on model object		
 		$result = $this->model->update('patch');
 
