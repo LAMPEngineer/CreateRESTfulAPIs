@@ -134,11 +134,14 @@ trait MyTraitController
 			$secret_key = env('JWT_SECRET');
 			$algo = env('JWT_ALGO');
 			
+			
+			JWT::$leeway = 60; // to fix - 'Cannot handle token prior to 2020-07-28T13:04:20+0200'
+
 			//JWT decode method
 			$decoded_data = JWT::decode($jwt_token, $secret_key, array($algo));
 			$data = $decoded_data->data; // user data
 			
-			$response = array('message' => 'Read jwt token successfully','status' => '1', 'user_data' => $data);
+			$response = array('message' => 'Read jwt token successfully','status' => '1', 'data' => $data);
 
 		}catch(Exception $ex){
 			self::throwError('0', $ex->getMessage());

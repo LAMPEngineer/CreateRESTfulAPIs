@@ -69,7 +69,7 @@ class UsersController extends MyController implements ControllerInterface
 
 					$user_data_arr = array('id' => $user_data->id, 'name' => $user_data->name, 'email' => $user_data->email);
 					
-					$response = array('message' => 'Login successful', 'status' => '1', 'user_data' => $user_data_arr);
+					$response = array('message' => 'Login successful', 'status' => '1', 'data' => $user_data_arr);
 
 				}else{
 					MyTrait::throwError('0', 'Invalid credentials');

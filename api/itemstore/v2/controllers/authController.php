@@ -1,6 +1,5 @@
 <?php
 
-use \Firebase\JWT\JWT;
 use MyTraitController as MyTrait;
 
  /*
@@ -89,14 +88,14 @@ class AuthController extends MyController implements ControllerInterface, AuthIn
 
 		$response = $users_controller->loginAction();
 
-	    $user_data = $response['user_data'];
+	    $user_data = $response['data'];
 
-  		unset($response['user_data']); // unset user data from responce
+  		unset($response['data']); // unset user data from responce
 
   		// generate token
 		$token = MyTrait::generateToken($user_data);
 
-		$response['jwt'] = $token;		
+		$response['data']['jwt'] = $token;		
 
 		return $response;
 	}
