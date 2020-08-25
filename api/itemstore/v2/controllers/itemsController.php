@@ -1,12 +1,13 @@
 <?php
-use MyTraitController as MyTrait;
+	use MyTraitController as MyTrait;
+	
 /*
  *  Items controller to have actions for items
  */
 
 class ItemsController extends MyController implements ControllerInterface
 {
-
+	
 	protected $controller;
 
 	/**
@@ -34,7 +35,7 @@ class ItemsController extends MyController implements ControllerInterface
 		$response = (object)MyTrait::readHeaderGetUserDataFromJWT();
 
 		if($response->status == '1' ){
-			$user_id = $response->user_data->id;
+			$user_id = $response->data->id;
 
 			$this->model->$setter($user_id);
 		}

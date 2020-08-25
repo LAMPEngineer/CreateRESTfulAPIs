@@ -1,5 +1,6 @@
 <?php
-use MyTraitController as MyTrait;
+	use MyTraitController as MyTrait;
+
 /*
  *  Items controller to have actions for items
  */

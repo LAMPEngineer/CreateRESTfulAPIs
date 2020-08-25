@@ -1,12 +1,12 @@
 <?php
-
-use MyTraitController as MyTrait;
+	use MyTraitController as MyTrait;
 
  /*
   *  Auth controller to have actions for items
   */
 class AuthController extends MyController implements ControllerInterface, AuthInterface
 {
+
 
 	/**
 	 * construct initialize db connection object

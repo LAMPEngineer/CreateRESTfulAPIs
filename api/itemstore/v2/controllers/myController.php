@@ -1,5 +1,6 @@
 <?php
-use MyTraitController as MyTrait;
+	use MyTraitController as MyTrait;
+	
 /**
  *  Parent controller to process requests
  *   and have action for child controller 
@@ -8,7 +9,6 @@ use MyTraitController as MyTrait;
 
 class MyController
 {
-
 	/**
 	 * to hold request data
 	 * @var array
