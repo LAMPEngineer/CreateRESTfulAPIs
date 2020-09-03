@@ -1,13 +1,20 @@
-# CreateRESTfulAPIs
+# Business requirement
 
-App creates RESTful service apis to create, show, list, edit & delete item. It uses GET, POST, PUT, PATCH & DELETE verbs to perform actions. The API returns status 1 for a successful request along with additional data and status 0 for an unsuccessful request which is an error.
+1. Create APIs in RESTful service to uses GET, POST, PUT, PATCH & DELETE verbs to perform actions
+2. Create Authentication server for JWT token generation and validation
+
+This app is created usign S.O.L.I.D. design pattern with 'Program to Interface' development methodology. 
+
+The API returns:
+ i.  status 1 for a successful request along with data (if require) 
+ ii. status 0 for an unsuccessful request which is an error.
 
 
 # Built
 App is built on core PHP 7.2.5 and MySQL 5.6
 
 
-# CRUD actions
+# Verbs to perform actions
 ![CURD_actions.jpg](./img/CURD_actions.jpg)
 
 
@@ -62,6 +69,6 @@ URI structure http://[host]:[port]/api/{service name}]/v{version number}/{resour
 
 
 
-# Policy
+# Methodology
 
 ![development_policy.jpg](./img/development_policy.jpg)
