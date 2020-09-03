@@ -3,11 +3,11 @@
 1. Create APIs in RESTful service to uses GET, POST, PUT, PATCH & DELETE verbs to perform actions
 2. Create Authentication server for JWT token generation and validation
 
-This app is created usign S.O.L.I.D. design pattern with 'Program to Interface' development methodology. 
+This app is created usign S.O.L.I.D. design pattern with '**Program to Interface**' development methodology. 
 
 The API returns:
-1. Status 1 for a successful request along with data (if requires)
-2. Status 0 for an unsuccessful request which is an error.
+* Status 1 for a successful request along with data (if requires)
+* Status 0 for an unsuccessful request which is an error.
 
 
 
