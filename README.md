@@ -6,8 +6,9 @@
 This app is created usign S.O.L.I.D. design pattern with 'Program to Interface' development methodology. 
 
 The API returns:
- i.  status 1 for a successful request along with data (if require) 
- ii. status 0 for an unsuccessful request which is an error.
+1. Status 1 for a successful request along with data (if requires)
+2. Status 0 for an unsuccessful request which is an error.
+
 
 
 # Built
