@@ -44,7 +44,7 @@ Implemented PSR-11
 
 # URI structure
 
-URI structure: **http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}**
+**http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}**
 
 1. Items URI         : http://127.0.0.1:8080/api/itemstore/v2/items/1    [requires JWT token on header]
 2. Users URI         : http://127.0.0.1:8080/api/itemstore/v2/users/1    [requires JWT token on header]
