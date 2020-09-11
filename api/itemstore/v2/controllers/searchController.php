@@ -1,5 +1,4 @@
 <?php
-	use MyTraitController as MyTrait;
 	
 /*
  *  Search controller 
@@ -7,14 +6,40 @@
 
 class SearchController 
 {
-	private $controller;
 
 	/**
-	 * initialize controller object
+	 * to hold action controller object
+	 * @var object
 	 */
-	public function __construct(ControllerInterface $controller_object)
+	private $action_controller;
+
+
+	
+	/**
+	 * initialize controller object
+	 * 
+	 * @param ControllerInterface $action_controller_object - controller injection - action controller of type ControllerInterface
+	 * 
+	 */
+	public function __construct(ControllerInterface $action_controller_object)
 	{
-		$this->controller = $controller_object;
+		$this->action_controller = $action_controller_object;
 	}
+
+
+
+
+	/**
+	 * index Action 
+	 * 
+	 * @return array - the search result
+	 */
+	public function indexAction(): array
+	{
+		$response = $this->action_controller->getAllAction();
+
+		return $response;
+	}
+
 
 }

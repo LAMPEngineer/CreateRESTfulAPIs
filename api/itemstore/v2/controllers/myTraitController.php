@@ -29,6 +29,7 @@ trait MyTraitController
 
 			$model = Container::get($model_name, $conn);
 
+
 			//$controller object 
 			$controller = Container::get($controller_name, $model);
 

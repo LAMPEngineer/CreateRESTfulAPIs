@@ -190,7 +190,20 @@ class RequestController implements RequestInterface
 	}
 
 
+	/**
+	 * function to process search requests
+	 * 
+	 * @param  ControllerInterface $search_controller 
+	 * @return array                          
+	 */
+	public function processSearchRequest(object $search_controller): array
+	{
 
+		// call controller action
+		$response = $search_controller->indexAction();
+		return $response;
+
+	}
 
 
 	/**
