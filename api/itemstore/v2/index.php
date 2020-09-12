@@ -31,13 +31,10 @@ $service_action ='';
 // check for auth request
 if($request->url_elements[1]=='auth'){
 	$action_name = $service = 'Auth';
-	
-	if(!empty($request->url_elements[2])){
-		// second element is the action 
-		$service_action = ucfirst($request->url_elements[2]);
-	} else MyTrait::throwError('0', 'ERROR: Bad Request');
-	
-	
+
+						// second element is the action 
+	$service_action = (!empty($request->url_elements[2]) and ($request->url_elements[2] == 'login')) ? ucfirst($request->url_elements[2]) : MyTrait::throwError('0', 'ERROR: Bad Request');
+		
 }else{
 	// check headers for authorization token
 	$all_headers = getallheaders(); 
@@ -45,6 +42,7 @@ if($request->url_elements[1]=='auth'){
 
 		//MyTrait::read token...
 		$response = (object)MyTrait::readTokenFromHeadersOrPostData();
+
 		if($response->status!='1')MyTrait::throwError('0', 'ERROR: Not authorize');
 		
 	 	} else MyTrait::throwError('0', 'ERROR: authorization token missing');
@@ -54,10 +52,9 @@ if($request->url_elements[1]=='auth'){
 	 * Here, authentication done.
 	 *  
 	 * By default, first element is action i.e the controller 
-	 * @var [type]
+	 * 
 	 */
 	$service = ucfirst($request->url_elements[1]);;
-	//$action_name = ucfirst($request->url_elements[1]);
 	
 	switch ($service) {
 		case 'Search':
