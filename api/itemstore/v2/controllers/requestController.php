@@ -1,5 +1,6 @@
 <?php
 
+use MyTraitController as MyTrait;
 use ContainerController as Container;
 
 /*
@@ -41,6 +42,8 @@ class RequestController implements RequestInterface
 			$this->format = $this->parameters['format'];
 		}
 	}
+
+
 
 	/**
 	 * Parse incoming parameters	
@@ -91,14 +94,96 @@ class RequestController implements RequestInterface
 
 
 
+
 	/**
 	 * function to check and process all request
-	 * and passon to the controller
+	 * and pass-on request to corresponding function
+	 * 
+	 * @return array response
+	 */
+	public function processRequest():array
+	{
+		$service = '';
+		$service_action ='';
+
+		// check for auth request
+		if($this->url_elements[1]=='auth'){
+			$action_name = $service = 'Auth';
+
+								// second element is the action 
+			$service_action = (!empty($this->url_elements[2]) and ($this->url_elements[2] == 'login')) ? ucfirst($this->url_elements[2]) : MyTrait::throwError('0', 'ERROR: Bad Request');
+				
+		}else{
+			// check headers for authorization token
+			$all_headers = getallheaders(); 
+			if(!empty($all_headers['Authorization'])) {
+
+				//MyTrait::read token...
+				$response = (object)MyTrait::readTokenFromHeadersOrPostData();
+
+				if($response->status!='1')MyTrait::throwError('0', 'ERROR: Not authorize');
+				
+			 	} else MyTrait::throwError('0', 'ERROR: authorization token missing');
+
+
+			/**
+			 * Here, authentication done.
+			 *  
+			 * By default, first element is action i.e the controller 
+			 * 
+			 */
+			$service = ucfirst($this->url_elements[1]);;
+			
+			switch ($service) {
+				case 'Search':
+
+					if(!empty($this->url_elements[2])){
+						// second element is the action 
+						$service_action = ucfirst($this->url_elements[2]);
+
+						//create search object
+						$service_action_obj  = MyTrait::buildObject($service_action);
+						$service_obj = Container::get($service.'Controller', $service_action_obj);
+
+						$service_action = '';
+						
+					} else MyTrait::throwError('0', 'ERROR: Bad Request');	
+
+				break;
+				
+				default:
+					$action_name = $service;
+					$service_action ='';
+					$service = 'Microservice';
+					break;
+			}
+
+		}
+
+		// create object
+		$service_obj = ($service != 'Search') ? MyTrait::buildObject($action_name) : $service_obj;
+
+		$process_action = 'process'. $service . 'Request';
+
+		// route the request to the right place
+		$result = $this->$process_action($service_obj, $service_action);
+
+		$response = $this->sendResponse($result);
+
+		return $response;
+	}
+
+
+
+
+	/**
+	 * function to check and process microservice requests
+	 * and pass-on request to corresponding controller
 	 * 
 	 * @param  ControllerInterface $controller object of Controller
 	 * @return array response
 	 */
-	public function processRequest(ControllerInterface $controller):array
+	public function processMicroserviceRequest(ControllerInterface $controller):array
 	{		
 		$this->setControllerProperty($controller);
 
@@ -170,6 +255,8 @@ class RequestController implements RequestInterface
 
 
 
+
+
 	/**
 	 * function to process auth requests
 	 * 
@@ -190,10 +277,13 @@ class RequestController implements RequestInterface
 	}
 
 
+
+
+
 	/**
 	 * function to process search requests
 	 * 
-	 * @param  ControllerInterface $search_controller 
+	 * @param  object $search_controller 
 	 * @return array                          
 	 */
 	public function processSearchRequest(object $search_controller): array
@@ -204,6 +294,9 @@ class RequestController implements RequestInterface
 		return $response;
 
 	}
+
+
+
 
 
 	/**
@@ -254,6 +347,8 @@ class RequestController implements RequestInterface
 
 		return $response;
 	}
+
+
 
 
 	/**

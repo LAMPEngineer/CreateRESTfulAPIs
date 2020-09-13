@@ -8,14 +8,26 @@ interface RequestInterface
 	 */
 	public function parseIncomingParams();
 
+
 	/**
 	 * function to check and process all request
-	 * and passon to the controller
+	 * and pass-on request to corresponding function
+	 * 
+	 * @return array response
+	 */
+	public function processRequest():array;
+
+
+
+	/**
+	 * function to check and process microservice requests
+	 * and pass-on request to corresponding controller
 	 * 
 	 * @param  ControllerInterface $controller object of Controller
 	 * @return array response
 	 */
-	function processRequest(ControllerInterface $controller):array;	
+	public function processMicroserviceRequest(ControllerInterface $controller):array;
+
 
 
 	/**
@@ -26,6 +38,19 @@ interface RequestInterface
 	 * @return array                          
 	 */
 	public function processAuthRequest(ControllerInterface $controller, string $auth_action): array;
+
+
+
+
+	/**
+	 * function to process search requests
+	 * 
+	 * @param  object $search_controller 
+	 * @return array                          
+	 */
+	public function processSearchRequest(object $search_controller): array;
+
+	
 
 
 	/**
