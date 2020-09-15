@@ -53,13 +53,13 @@ Implemented PSR-11
 
 # Features
 
-- [x] MVC Architecture
 - [x] Program to interfaces
 - [x] Object container - PSR-11
 - [X] CORS Compatible
 - [X] S.O.L.I.D. Disign
 - [X] Traits
 - [X] JWT Authentication
+- [x] Microservices Architecture
 - [ ] Shorting & Filtering
 - [ ] Pagination
 
