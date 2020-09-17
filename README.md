@@ -39,22 +39,22 @@ Program to interfaces, not implementations
 
 # Object Container Interface
 
-Implemented PSR-11
+Implemented [PSR-11](https://www.php-fig.org/psr/psr-11/)
 
 
 # URI structure
 
 **http://[host]:[port]/api/{service name}]/v{version number}/{resource}/{resource ID}**
 
-1. Items URI         : http://127.0.0.1:8080/api/itemstore/v2/items/1    [requires JWT token on header]
-2. Users URI         : http://127.0.0.1:8080/api/itemstore/v2/users/1    [requires JWT token on header]
-3. Authentication URI: http://127.0.0.1:8080/api/itemstore/v2/auth/login [JWT token generation]
+1. Items URI         : http://127.0.0.1:8080/api/itemstore/v2/items/1    [`requires JWT token on header`]
+2. Users URI         : http://127.0.0.1:8080/api/itemstore/v2/users/1    [`requires JWT token on header`]
+3. Authentication URI: http://127.0.0.1:8080/api/itemstore/v2/auth/login [`JWT token generation`]
 
 
 # Features
 
 - [x] Program to interfaces
-- [x] Object container - PSR-11
+- [x] Object container - [PSR-11](https://www.php-fig.org/psr/psr-11/)
 - [X] CORS Compatible
 - [X] S.O.L.I.D. Disign
 - [X] Traits
