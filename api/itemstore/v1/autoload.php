@@ -7,16 +7,16 @@ spl_autoload_register('apiAutoload');
 function apiAutoload($classname)
 {
 	if(preg_match('/[a-zA-Z]+Controller$/', $classname)){
-		include __DIR__ . '/controllers/' . $classname . '.php';
+		include (__DIR__ . "/controllers/" . lcfirst($classname) . ".php");
 		return true;
 	} elseif (preg_match('/[a-zA-Z]+Model$/', $classname)) {
-		include __DIR__ . '/models/' . $classname . '.php';
+		include __DIR__ . '/models/' . lcfirst($classname) . '.php';
 		return true;
 	} elseif (preg_match('/[a-zA-Z]+View$/', $classname)) {
-		include __DIR__ . '/views/' . $classname . '.php';
+		include __DIR__ . '/views/' . lcfirst($classname) . '.php';
 		return true;
 	} elseif (preg_match('/[a-zA-Z]+Config$/', $classname)) {
-		include __DIR__ . './../configs/' . $classname . '.php';
+		include __DIR__ . './../configs/' . lcfirst($classname) . '.php';
 	}
 }
 

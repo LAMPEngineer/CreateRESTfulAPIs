@@ -64,7 +64,7 @@ class MyController
 		$this->request_verb = strtolower($request->verb);
 
 		// requested controller
-		$this->controller = $request->url_elements[1];
+		$this->controller = $request->url_elements[5];
 
 		// requested data
 		$this->data = $request->parameters;
@@ -73,14 +73,14 @@ class MyController
 		$this->format = $request->format;
 
 		// action id from request url
-		if(isset($request->url_elements[2])){
+		if(isset($request->url_elements[6])){
 
 			// for POST ID not needed
 			if($this->request_verb=='post'){
 				return $response = array('message' => 'ERROR: Bad Request','status' => '0');
 			}
 			
-			$this->resource_id = (int)$request->url_elements[2];
+			$this->resource_id = (int)$request->url_elements[6];
 
 			// invalid resource id
 			if(($this->resource_id == 0) or empty($this->resource_id)){

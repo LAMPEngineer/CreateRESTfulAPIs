@@ -6,21 +6,26 @@
  *  
  */
 
-// check PATH_INFO
-if(!isset($_SERVER['PATH_INFO'])){
-	// redirect to root
-	header("Location: ../../../");
-}
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 
 //autoload 
-include __DIR__ . '\autoload.php';
+include (__DIR__ . "/autoload.php");
 
 // request object
 $request = new RequestController();
 
-// route the request to the right place
-$controller_name = ucfirst($request->url_elements[1]) . 'Controller';
 
+// check request URL
+if(!isset($request->url_elements[5]) or $request->url_elements[5] ==''){
+	// redirect to root
+	header("Location: ../../../");
+}
+
+// route the request to the right place
+$controller_name = ucfirst($request->url_elements[5]) . 'Controller';
 
 if(class_exists($controller_name)){
 	
