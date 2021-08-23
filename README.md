@@ -12,7 +12,7 @@ The API returns:
 
 
 # Built
-App is built on core PHP 7.2.5 and MySQL 5.6
+App is built on core PHP 8.0.9 and MySQL 8.0.26
 
 
 # Verbs to perform actions
